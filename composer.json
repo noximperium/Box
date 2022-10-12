@@ -1,0 +1,7 @@
+{
+  "name": "kakalition/collection-container",
+  "description": "",
+  "require": {
+    "php": ">=7.3"
+  }
+}
