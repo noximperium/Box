@@ -128,6 +128,9 @@ class ImmutableArray
     return new ImmutableArray($this->val);
   }
 
+  /**
+   * Returns average value of this `ImmutableArray` (on specified path if supplied).
+   */
   public function average($path = null)
   {
     if ($path === null && !$this->isContentScalar()) throw new Exception('Contents is not scalar.');
@@ -136,6 +139,27 @@ class ImmutableArray
     else $values = $this->val;
 
     return array_sum($values) / count($values);
+  }
+
+  /**
+   * Breaks this `ImmutableArray` into multiple, smaller array of a given size:
+   */
+  public function chunk($size)
+  {
+    $chunked = [];
+    $temp = [];
+
+    foreach ($this->val as $value) {
+      $temp[] = $value;
+      if (count($temp) === $size) {
+        $chunked[] = $temp;
+        $temp = [];
+      }
+    }
+
+    if (count($temp) !== 0) $chunked[] = $temp;
+
+    return new ImmutableArray($chunked);
   }
 
   /**
