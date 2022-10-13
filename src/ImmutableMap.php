@@ -129,6 +129,47 @@ class ImmutableMap
     return new ImmutableMap($temp);
   }
 
+  /** CHANGE DOC
+   * Groups values returned by the valueTransform function (if passed) applied to each element of the original collection 
+   * by the key returned by the given keySelector function applied to the element and 
+   * returns a map where each group key is associated with a list of corresponding values.
+   * @param callable $keyTransform
+   * @param callable $valueTransform
+   * @return ImmutableMap 
+   */
+  public function groupBy($keyTransform, $valueTransform = null)
+  {
+    $result = [];
+
+    foreach ($this->val as $key => $value) {
+      if ($valueTransform) $value = $valueTransform($key, $value);
+      $key = $keyTransform($key, $value);
+      $keyExists = array_key_exists($key, $result);
+
+      if ($keyExists) $result[$key][] = $value;
+      else $result += [$key => [$value]];
+    }
+
+    return ImmutableMap::of($result);
+  }
+
+  public function groupByKeyed($groupKeyTransform, $keyTransform, $valueTransform = null)
+  {
+    $result = [];
+
+    foreach ($this->val as $key => $value) {
+      $keyOnGroup = $keyTransform($key, $value);
+      $groupKey = $groupKeyTransform($key, $value);
+      if ($valueTransform) $value = $valueTransform($key, $value);
+
+      $groupKeyExists = array_key_exists($groupKey, $result);
+      if ($groupKeyExists) $result[$groupKey][$keyOnGroup] = $value;
+      else $result += [$groupKey => [$keyOnGroup => $value]];
+    }
+
+    return ImmutableMap::of($result);
+  }
+
   /**
    * Returns whether or not an object has an own property with the specified name.
    * @param String $key A key to check.
@@ -156,6 +197,70 @@ class ImmutableMap
     }
 
     return true;
+  }
+
+  /**
+   * Returns a new instance of ImmutableArray by running `$transform` through `ImmutableMap` values. 
+   * @param callable $transform Function to apply to each element. ($key, $value) => mixed.
+   */
+  public function map($transform)
+  {
+    $array = [];
+
+    foreach ($this->val as $key => $value) {
+      $array[] = $transform($key, $value);
+    }
+
+    return ImmutableArray::of($array);
+  }
+
+  /**
+   * Returns a new `ImmutableMap` with entries having the keys obtained by 
+   * applying the transform function to each entry in this `ImmutableMap` and the values of this `ImmutableMap`.
+   */
+  public function mapKeys($transform)
+  {
+    $map = [];
+
+    foreach ($this->val as $key => $value) {
+      $key = $transform($key, $value);
+      $map[$key] = $value;
+    }
+
+    return new ImmutableMap($map);
+  }
+
+  /**
+   * Returns a new `ImmutableMap` with entries having the keys of this map 
+   * and the values obtained by applying the transform function to each entry in this `ImmutableMap`.
+   */
+  public function mapValues($transform)
+  {
+    $map = [];
+
+    foreach ($this->val as $key => $value) {
+      $map[$key] = $transform($key, $value);
+    }
+
+    return new ImmutableMap($map);
+  }
+
+  /**
+   * Returns a new `ImmutableMap` with entries having the keys obtained by 
+   * applying the `$keyTransform` function to each entry and the values obtained by 
+   * applying the `$valueTransform` function to each entry in this `ImmutableMap`.
+   */
+  public function mapKeysValues($keyTransform, $valueTransform)
+  {
+    $map = [];
+
+    foreach ($this->val as $key => $value) {
+      $entryKey = $keyTransform($key, $value);
+      $entryValue = $valueTransform($key, $value);
+      $map[$entryKey] = $entryValue;
+    }
+
+    return new ImmutableMap($map);
   }
 
   /**
@@ -261,6 +366,23 @@ class ImmutableMap
     $pathValue = $this->path($path);
 
     return $pathValue ?? $default;
+  }
+
+  /**
+   * Returns a copy of `ImmutableMap` containing only the keys specified. 
+   * If the key does not exist, the property is ignored.
+   */
+  public function pick($keys)
+  {
+    $result = [];
+
+    foreach ($keys as $key) {
+      if (array_key_exists($key, $this->val)) {
+        $result[$key] = $this->val[$key];
+      }
+    }
+
+    return new ImmutableMap($result);
   }
 
   /**
