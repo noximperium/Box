@@ -13,8 +13,15 @@ class ImmutableArray
     $this->val = $init;
   }
 
+  /**
+   * Returns an instance of ImmutableArray with passed initial value.
+   * @param array $init An initial value.
+   * @return ImmutableArray A new instance of ImmutableArray
+   */
   public static function of($init = [])
   {
+    if (gettype($init) !== 'array') throw new Exception('Initial value must be an array');
+
     return new ImmutableArray($init);
   }
 
@@ -55,6 +62,34 @@ class ImmutableArray
     $this->val[$index] = $fn($this->val[$index]);
 
     return new ImmutableArray($this->val);
+  }
+
+  /**
+   * Returns true if all elements of the list match the predicate, false if there are any that don't.
+   * @param callable $predicate The predicate function.
+   * @return boolean `true` if the predicate is satisfied by every element, `false` otherwise.
+   */
+  public function all($predicate)
+  {
+    foreach ($this->val as $item) {
+      if (!$predicate($item)) return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Returns true if at least one of the elements of the list match the predicate, false otherwise.
+   * @param callable $predicate The predicate function.
+   * @return boolean `true` if the predicate is satisfied by at least one element, `false` otherwise.
+   */
+  public function any($predicate)
+  {
+    foreach ($this->val as $item) {
+      if ($predicate($item)) return true;
+    }
+
+    return false;
   }
 
   /**
@@ -102,6 +137,35 @@ class ImmutableArray
     return new ImmutableArray(array_merge($this->val, $array));
   }
 
+  /**
+   * Checks if the specified element is contained in this collection.
+   */
+  public function contains($element)
+  {
+    foreach ($this->val as $value) {
+      if ($element === $value) return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Returns the number of elements matching the given predicate.
+   */
+  public function count($predicate)
+  {
+    $count = 0;
+    foreach ($this->val() as $value) {
+      if ($predicate($value)) $count++;
+    }
+
+    return $count;
+  }
+
+  /**
+   * Returns a list containing only distinct elements from the given collection.
+   * @return ImmutableArray A new instance with distinct elements.
+   */
   public function distinct()
   {
     $result = [];
@@ -213,6 +277,32 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Checks if a list ends with the provided sublist or value.
+   * @param array|mixed $suffix Checks if a list ends with the provided sublist.
+   * @return boolean Whether current list ended with `$suffix` or not.
+   */
+  public function endsWith($suffix)
+  {
+    $lastIndex = count($this->val) - 1;
+
+    if (gettype($suffix) !== 'array') {
+      return $this->val[$lastIndex] === $suffix;
+    }
+
+    $length = count($suffix);
+    $valueToCheck = array_slice($this->val, count($this->val) - $length);
+
+    if ($valueToCheck === $suffix) return true;
+
+    return false;
+  }
+
+  /**
+   * Returns a list containing only elements matching the given predicate.
+   * @param callable $predicate A predicate used to test whether the element should be included.
+   * @return ImmutableArray A new array with only element that satisfy `$predicate`.
+   */
   public function filter($predicate)
   {
     $result = [];
@@ -225,6 +315,11 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Returns a list containing only elements matching the given bipredicate.
+   * @param callable $biPredicate A predicate used to test whether the element should be included.
+   * @return ImmutableArray A new array with only element that satisfy `$biPredicate`.
+   */
   public function filterIndexed($biPredicate)
   {
     $result = [];
@@ -237,6 +332,11 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Returns a list containing all elements not matching the given predicate.
+   * @param callable $predicate A predicate used to test whether the element should be included.
+   * @return ImmutableArray A new array with only element that dissatisfy `$predicate`.
+   */
   public function filterNot($predicate)
   {
     $result = [];
@@ -249,6 +349,10 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Returns a list containing all elements that are not null.
+   * @return ImmutableArray A new array without null value.
+   */
   public function filterNotNull()
   {
     $result = [];
@@ -289,6 +393,10 @@ class ImmutableArray
     return null;
   }
 
+  /**
+   * Returns the first element.
+   * @return mixed Element on first index.
+   */
   public function first()
   {
     $length = count($this->val);
@@ -297,6 +405,12 @@ class ImmutableArray
     return $this->val[0];
   }
 
+  /**
+   * Returns the first non-null value produced by transform function being applied to elements of this collection in iteration order, 
+   * or throws Exception if no non-null value was produced.
+   * @param callable $transform 
+   * @return mixed
+   */
   public function firstNotNullOf($transform)
   {
     foreach ($this->val as $value) {
@@ -307,6 +421,12 @@ class ImmutableArray
     throw new Exception('No such element found.');
   }
 
+  /**
+   * Returns the first non-null value produced by transform function being applied to elements of this collection in iteration order, 
+   * or null if no non-null value was produced.
+   * @param callable $transform
+   * @return mixed
+   */
   public function firstNotNullOfOrNull($transform)
   {
     foreach ($this->val as $value) {
@@ -317,20 +437,23 @@ class ImmutableArray
     return null;
   }
 
-  public function firstOrNull($predicate = null)
+  /**
+   * Returns the first element, or null if the list is empty.
+   * @return mixed
+   */
+  public function firstOrNull()
   {
     $length = count($this->val);
     if ($length === 0) return null;
 
-    if (!$predicate) return $this->val[0];
-
-    foreach ($this->val as $value) {
-      if ($predicate($value)) return $value;
-    }
-
-    return null;
+    return $this->val[0];
   }
 
+  /**
+   * Returns a single list of all elements yielded from results of transform function being invoked on each element of original collection.
+   * @param callable $transform
+   * @return ImmutableArray
+   */
   public function flatMap($transform)
   {
     $result = [];
@@ -341,6 +464,9 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Returns a single list of all elements yielded from results of transform function being invoked on each element and its index in the original collection.
+   */
   public function flatMapIndexed($transform)
   {
     $result = [];
@@ -372,6 +498,12 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Accumulates value starting with initial value and applying operation from left to right to current accumulator value and each element.
+   * @param mixed $initial
+   * @param callable $operation
+   * @return mixed
+   */
   public function fold($initial, $operation)
   {
     $accumulator = $initial;
@@ -382,6 +514,14 @@ class ImmutableArray
 
     return $accumulator;
   }
+
+  /**
+   * Accumulates value starting with initial value and applying operation from left to right to current accumulator value 
+   * and each element with its index in the original collection.
+   * @param mixed $initial
+   * @param callable $operation
+   * @return mixed
+   */
 
   public function foldIndexed($initial, $operation)
   {
@@ -394,6 +534,12 @@ class ImmutableArray
     return $accumulator;
   }
 
+  /**
+   * Accumulates value starting with initial value and applying operation from right to left to each element and current accumulator value.
+   * @param mixed $initial
+   * @param callable $operation
+   * @return mixed
+   */
   public function foldRight($initial, $operation)
   {
     $accumulator = $initial;
@@ -406,6 +552,13 @@ class ImmutableArray
     return $accumulator;
   }
 
+  /**
+   * Accumulates value starting with initial value and applying operation from right to left to each element 
+   * with its index in the original list and current accumulator value.
+   * @param mixed $initial
+   * @param callable $operation
+   * @return mixed
+   */
   public function foldRightIndexed($initial, $operation)
   {
     $accumulator = $initial;
@@ -418,31 +571,62 @@ class ImmutableArray
     return $accumulator;
   }
 
+  /**
+   * Performs the given action on each element.
+   * @param callable $action
+   */
   public function forEach($action)
   {
     foreach ($this->val as $value) $action($value);
   }
 
+  /**
+   * Performs the given action on each element, providing sequential index with the element.
+   * @param callable $action
+   */
   public function forEachIndexed($action)
   {
     foreach ($this->val as $index => $value) $action($index, $value);
   }
 
+  /**
+   * Returns the element at the specified index in the list.
+   * @param int $index Index of array to retrieve.
+   */
   public function get($index)
   {
     return $this->val[$index];
   }
 
+  /**
+   * Returns an element at the given index or the result of calling the defaultValue function if the index is out of bounds of this list.
+   * @param int $index
+   * @param mixed $defaultValue
+   * @return mixed
+   */
   public function getOrElse($index, $defaultValue)
   {
     return $this->val[$index] ?? $defaultValue;
   }
 
+  /**
+   * Returns an element at the given index or null if the index is out of bounds of this list.
+   * @param int $index
+   * @return mixed
+   */
   public function getOrNull($index)
   {
     return $this->val[$index] ?? null;
   }
 
+  /**
+   * Groups values returned by the valueTransform function (if passed) applied to each element of the original collection 
+   * by the key returned by the given keySelector function applied to the element and 
+   * returns a map where each group key is associated with a list of corresponding values.
+   * @param callable $keySelector
+   * @param callable $valueTransform
+   * @return ImmutableMap 
+   */
   public function groupBy($keySelector, $valueTransform = null)
   {
     $result = [];
@@ -459,6 +643,20 @@ class ImmutableArray
     return ImmutableMap::of($result);
   }
 
+  /**
+   * Returns the first element of this ImmutableArray.
+   */
+  public function head()
+  {
+    return $this->val[0];
+  }
+
+
+  /**
+   * Fill this ImmutableArray with specified value if currently empty.
+   * @param $default
+   * @return ImmutableArray
+   */
   public function ifEmpty($default)
   {
     if (gettype($default) !== 'array') throw new Exception('Default value should be an array.');
@@ -468,6 +666,11 @@ class ImmutableArray
     return $this;
   }
 
+  /**
+   * Returns first index of element, or -1 if the list does not contain element.
+   * @param mixed $element 
+   * @return int
+   */
   public function indexOf($element)
   {
     foreach ($this->val as $index => $value) {
@@ -477,6 +680,11 @@ class ImmutableArray
     return -1;
   }
 
+  /**
+   * Returns index of the first element matching the given predicate, or -1 if the list does not contain such element.
+   * @param callable $predicate
+   * @return int;
+   */
   public function indexOfFirst($predicate)
   {
     foreach ($this->val as $index => $value) {
@@ -486,6 +694,11 @@ class ImmutableArray
     return -1;
   }
 
+  /**
+   * Returns index of the last element matching the given predicate, or -1 if the list does not contain such element.
+   * @param callable $predicate
+   * @return int;
+   */
   public function indexOfLast($predicate)
   {
     $lastIndex = count($this->val) - 1;
@@ -497,6 +710,9 @@ class ImmutableArray
     return -1;
   }
 
+  /**
+   * Returns true if the collection is not empty.
+   */
   public function isNotEmpty()
   {
     if (count($this->val) === 0) return false;
@@ -504,6 +720,9 @@ class ImmutableArray
     return true;
   }
 
+  /**
+   * Creates a string from all the elements separated using separator and using the given prefix and postfix if supplied.
+   */
   public function joinToString($separator = ', ', $prefix = '', $postfix = '', $limit = -1, $truncated = '...')
   {
     $result = $prefix;
@@ -525,6 +744,9 @@ class ImmutableArray
     return $result;
   }
 
+  /**
+   * Returns the last element.
+   */
   public function last()
   {
     $length = count($this->val);
@@ -533,6 +755,9 @@ class ImmutableArray
     return $this->val[$length - 1];
   }
 
+  /**
+   * Returns last index of element, or -1 if the list does not contain element.
+   */
   public function lastIndexOf($element)
   {
     $lastIndex = count($this->val) - 1;
@@ -544,6 +769,9 @@ class ImmutableArray
     return -1;
   }
 
+  /**
+   * Returns the last element, or null if the list is empty.
+   */
   public function lastOrNull()
   {
     $length = count($this->val);
@@ -552,6 +780,9 @@ class ImmutableArray
     return $this->val[$length - 1];
   }
 
+  /**
+   * Returns a list containing the results of applying the given transform function to each element in the original collection.
+   */
   public function map($transform)
   {
     $result = [];
@@ -563,6 +794,9 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Returns a list containing the results of applying the given transform function to each element and its index in the original collection.
+   */
   public function mapIndexed($transform)
   {
     $result = [];
@@ -574,6 +808,9 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Returns a list containing only the non-null results of applying the given transform function to each element and its index in the original collection.
+   */
   public function mapIndexedNotNull($transform)
   {
     $result = [];
@@ -586,6 +823,9 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Returns a list containing only the non-null results of applying the given transform function to each element in the original collection.
+   */
   public function mapNotNull($transform)
   {
     $result = [];
@@ -598,6 +838,9 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Returns true if the collection has no elements.
+   */
   public function none($predicate = null)
   {
     $zeroLength = count($this->val) === 0;
@@ -612,6 +855,9 @@ class ImmutableArray
     return true;
   }
 
+  /**
+   * Performs the given action on each element and returns the collection itself afterwards.
+   */
   public function onEach($action)
   {
     foreach ($this->val as $value) {
@@ -621,6 +867,9 @@ class ImmutableArray
     return $this;
   }
 
+  /**
+   * Performs the given action on each element, providing sequential index with the element, and returns the collection itself afterwards.
+   */
   public function onEachIndexed($action)
   {
     foreach ($this->val as $index => $value) {
@@ -648,6 +897,41 @@ class ImmutableArray
     return new ImmutableArray([$satisfy, $dissatisfy]);
   }
 
+  /** 
+   * Returns a new list by plucking the same named property off all objects in the list supplied.
+   * @param String $key The key name to pluck off of each object.
+   */
+  public function pluck($key)
+  {
+    $keys = explode('.', $key);
+
+    $result = array_map(function ($value) use ($keys) {
+      $ref = $value;
+
+      foreach ($keys as $key) {
+        if (array_key_exists($key, $ref)) $ref = $ref[$key];
+        else return null;
+      }
+
+      return $ref;
+    }, $this->val);
+
+    return new ImmutableArray($result);
+  }
+
+  /**
+   * Returns a new list with the given element at the front, followed by the contents of the list.
+   */
+  public function prepend($element)
+  {
+    $result = [$element, ...$this->val];
+
+    return new ImmutableArray($result);
+  }
+
+  /**
+   * Accumulates value starting with the first element and applying operation from left to right to current accumulator value and each element.
+   */
   public function reduce($operation)
   {
     $length = count($this->val);
@@ -662,6 +946,10 @@ class ImmutableArray
     return $accumulator;
   }
 
+  /**
+   * Accumulates value starting with the first element and applying operation from left to right to current accumulator value 
+   * and each element with its index in the original collection.
+   */
   public function reduceIndexed($operation)
   {
     $length = count($this->val);
@@ -676,6 +964,9 @@ class ImmutableArray
     return $accumulator;
   }
 
+  /**
+   * Accumulates value starting with the first element and applying operation from left to right to current accumulator value and each element.
+   */
   public function reduceOrNull($operation)
   {
     $length = count($this->val);
@@ -690,6 +981,10 @@ class ImmutableArray
     return $accumulator;
   }
 
+  /**
+   * Accumulates value starting with the first element and applying operation from left to right to current accumulator value 
+   * and each element with its index in the original collection.
+   */
   public function reduceIndexedOrNull($operation)
   {
     $length = count($this->val);
@@ -704,6 +999,9 @@ class ImmutableArray
     return $accumulator;
   }
 
+  /**
+   * Accumulates value starting with the last element and applying operation from right to left to each element and current accumulator value.
+   */
   public function reduceRight($operation)
   {
     $length = count($this->val);
@@ -719,6 +1017,10 @@ class ImmutableArray
     return $accumulator;
   }
 
+  /**
+   * Accumulates value starting with the last element and applying operation from right to left to each element 
+   * with its index in the original list and current accumulator value.
+   */
   public function reduceRightIndexed($operation)
   {
     $length = count($this->val);
@@ -734,6 +1036,10 @@ class ImmutableArray
     return $accumulator;
   }
 
+  /**
+   * Accumulates value starting with the last element and applying operation from right to left to each element 
+   * with its index in the original list and current accumulator value.
+   */
   public function reduceRightIndexedOrNull($operation)
   {
     $length = count($this->val);
@@ -749,6 +1055,9 @@ class ImmutableArray
     return $accumulator;
   }
 
+  /**
+   * Accumulates value starting with the last element and applying operation from right to left to each element and current accumulator value.
+   */
   public function reduceRightOrNull($operation)
   {
     $length = count($this->val);
@@ -764,11 +1073,18 @@ class ImmutableArray
     return $accumulator;
   }
 
+  /**
+   * Returns a list with elements in reversed order.
+   */
   public function reverse()
   {
     return new ImmutableArray(array_reverse($this->val));
   }
 
+  /**
+   * Returns a list containing successive accumulation values generated by applying operation from left to right 
+   * to each element and current accumulator value that starts with initial value.
+   */
   public function runningFold($initial, $operation)
   {
     $accumulator = $initial;
@@ -782,6 +1098,10 @@ class ImmutableArray
     return $result;
   }
 
+  /**
+   * Returns a list containing successive accumulation values generated by applying operation from left to right 
+   * to each element, its index in the original collection and current accumulator value that starts with initial value.
+   */
   public function runningFoldIndexed($initial, $operation)
   {
     $accumulator = $initial;
@@ -795,6 +1115,10 @@ class ImmutableArray
     return $result;
   }
 
+  /**
+   * Returns a list containing successive accumulation values generated by applying operation from left to right
+   * to each element and current accumulator value that starts with the first element of this collection.
+   */
   public function runningReduce($operation)
   {
     $length = count($this->val);
@@ -809,6 +1133,10 @@ class ImmutableArray
     return $result;
   }
 
+  /**
+   * Returns a list containing successive accumulation values generated by applying operation from left to right
+   * to each element, its index in the original collection and current accumulator value that starts with the first element of this collection.
+   */
   public function runningReduceIndexed($operation)
   {
     $length = count($this->val);
@@ -834,6 +1162,9 @@ class ImmutableArray
     return new ImmutableArray(array_slice($this->val, $from, $to - $from));
   }
 
+  /**
+   * Returns a list of all elements sorted according to natural sort order of the value returned by specified selector function.
+   */
   public function sortBy($selector)
   {
     $result = $this->val;
@@ -844,6 +1175,9 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Returns a list of all elements sorted descending according to natural sort order of the value returned by specified selector function.
+   */
   public function sortByDescending($selector)
   {
     $result = $this->val;
@@ -854,6 +1188,9 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Returns a list containing first n elements.
+   */
   public function take($n)
   {
     $result = array_slice($this->val, 0, $n);
@@ -861,6 +1198,9 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Returns a list containing last n elements.
+   */
   public function takeLast($n)
   {
     $result = array_slice($this->val, count($this->val) - $n);
@@ -868,6 +1208,9 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Returns a list containing last elements satisfying the given predicate.
+   */
   public function takeLastWhile($predicate)
   {
     $result = [];
@@ -881,6 +1224,9 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Returns a list containing first elements satisfying the given predicate.
+   */
   public function takeWhile($predicate)
   {
     $result = [];
@@ -894,6 +1240,9 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Inserts the supplied element into the list, at the specified index.
+   */
   public function insert($index, $element)
   {
     $a = array_slice($this->val, 0, $index);
@@ -903,6 +1252,9 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Inserts the sub-list into the list, at the specified index.
+   */
   public function insertAll($index, $elements)
   {
     $a = array_slice($this->val, 0, $index);
@@ -912,6 +1264,9 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Creates a new list with the separator interposed between elements.
+   */
   public function intersperse($separator)
   {
     $result = [];
@@ -924,19 +1279,9 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
-  public function join($separator)
-  {
-    $result = "";
-    $lastIndex = count($this->val) - 1;
-
-    foreach ($this->val as $key => $value) {
-      $result .= $value;
-      if ($key !== $lastIndex) $result .= $separator;
-    }
-
-    return $result;
-  }
-
+  /**
+   * Move an item, at index `$from`, to index `$to`, in a list of elements. A new list will be created containing the new elements order.
+   */
   public function move($from, $to)
   {
     $result = $this->val;
@@ -945,39 +1290,6 @@ class ImmutableArray
 
     $result[$from] = $b;
     $result[$to] = $a;
-
-    return new ImmutableArray($result);
-  }
-
-  public function prepend($element)
-  {
-    $result = [$element, ...$this->val];
-
-    return new ImmutableArray($result);
-  }
-
-  public function reduceWhile($predicate, $iterator, $accumulator = null)
-  {
-    $length = count($this->val);
-    $acc = $accumulator ?? $this->val[0];
-    $startIndex = $accumulator ? 0 : 1;
-
-    for ($i = $startIndex; $i < $length; $i++) {
-      $element = $this->val[$i];
-
-      if ($predicate($acc, $element)) $acc = $iterator($acc, $element);
-      else return $acc;
-    }
-
-    return $acc;
-  }
-
-  public function reject($predicate)
-  {
-    $result = [];
-    foreach ($this->val as $value) {
-      if (!$predicate($value)) $result[] = $value;
-    }
 
     return new ImmutableArray($result);
   }
@@ -1001,227 +1313,45 @@ class ImmutableArray
   }
 
   /**
-   * Scan is similar to reduce, but returns a list of successively reduced values from the left
-   * @param callable $iterator The iterator function. Receives two values, the accumulator and the current element from the array.
-   * @param mixed $accumulator The accumulator value.
-   * @return ImmutableArray A list of all intermediately reduced values.
+   * Checks if a list starts with the provided sublist or value.
    */
-  public function scan($iterator, $accumulator = null)
+  public function startsWith($prefix)
   {
-    $list = $this->val;
-    $length = count($list);
-
-    $acc = $accumulator ?? $list[0];
-    $startIndex = $accumulator === null ? 1 : 0;
-
-    $result = [$acc];
-
-    for ($i = $startIndex; $i < $length; $i++) {
-      $acc = $iterator($acc, $list[$i]);
-      $result[] = $acc;
+    if (gettype($prefix) !== 'array') {
+      return $this->val[0] === $prefix;
     }
 
-    return new ImmutableArray($result);
-  }
+    $length = count($prefix);
+    $valueToCheck = array_slice($this->val, 0, $length);
 
-  public function sort($comparator)
-  {
-    $result = $this->val;
-    usort($result, $comparator);
-
-    return new ImmutableArray($result);
-  }
-
-  public function splitAt($index)
-  {
-    $a = array_slice($this->val, 0, $index);
-    $b = array_slice($this->val, $index);
-
-    return new ImmutableArray([$a, $b]);
-  }
-
-  public function splitEvery($n)
-  {
-    $length = count($this->val);
-    $result = [];
-    $temp = [];
-
-    for ($i = 0; $i < $length; $i++) {
-      $temp[] = $this->val[$i];
-      if (count($temp) == $n) {
-        $result[] = $temp;
-        $temp = [];
-      }
-    }
-
-    if (count($temp) != 0) $result[] = $temp;
-    return new ImmutableArray($result);
-  }
-
-
-  // ==========================================================================
-  // Reflective Operation
-  // ==========================================================================
-
-  /**
-   * Returns true if all elements of the list match the predicate, false if there are any that don't.
-   * @param callable $predicate The predicate function.
-   * @return boolean `true` if the predicate is satisfied by every element, `false` otherwise.
-   */
-  public function all($predicate)
-  {
-    foreach ($this->val as $item) {
-      if (!$predicate($item)) return false;
-    }
-
-    return true;
-  }
-
-  /**
-   * Returns true if at least one of the elements of the list match the predicate, false otherwise.
-   * @param callable $predicate The predicate function.
-   * @return boolean `true` if the predicate is satisfied by at least one element, `false` otherwise.
-   */
-  public function any($predicate)
-  {
-    foreach ($this->val as $item) {
-      if ($predicate($item)) return true;
-    }
+    if ($valueToCheck === $prefix) return true;
 
     return false;
   }
 
-  public function at($index)
-  {
-    $exists = array_key_exists($index, $this->val);
-    if (!$exists) throw new Exception('Index not found!');
-
-    return $this->val[$index];
-  }
-
-  public function atOr($index = 0, $defautValue = null)
-  {
-    return $this->val[$index] ?? $defautValue;
-  }
-
-  public function contains($element)
-  {
-    foreach ($this->val as $value) {
-      if ($element === $value) return true;
-    }
-
-    return false;
-  }
-
-  public function count($predicate)
-  {
-    $count = 0;
-    foreach ($this->val() as $value) {
-      if ($predicate($value)) $count++;
-    }
-
-    return $count;
-  }
-
   /**
-   * Checks if a list ends with the provided sublist.
-   * @param array|mixed $suffix Checks if a list ends with the provided sublist.
-   * @return boolean Whether current list ended with `$suffix` or not.
+   * Returns the size of the collection.
    */
-  public function endsWith($suffix)
-  {
-    $suffixLength = count($suffix);
-    $currentLength = count($this->val);
-    $sublist = array_slice($this->val, $currentLength - $suffixLength);
-
-    return $sublist === $suffix;
-  }
-
-  /**
-   * Returns the index of the first element of the list which matches the predicate, or -1 if no element matches.
-   * @param callable $predicate The predicate function used to determine if the element is the desired one.
-   * @return mixed|null The index of element found, or `-1`.
-   */
-  public function findIndex($predicate)
-  {
-    foreach ($this->val as $key => $value) {
-      if ($predicate($value)) return $key;
-    }
-
-    return -1;
-  }
-
-  /**
-   * Returns the index of the last element of the list which matches the predicate, or -1 if no element matches.
-   * @param callable $predicate The predicate function used to determine if the element is the desired one.
-   * @return mixed|null The index of element found, or `-1`.
-   */
-  public function findLastIndex($predicate)
-  {
-    for ($i = count($this->val) - 1; $i >= 0; $i++) {
-      $element = $this->val[$i];
-      if ($predicate($element)) return $i;
-    }
-
-    return -1;
-  }
-
-  public function includes($element)
-  {
-    foreach ($this->val as $value) {
-      if ($value === $element) return true;
-    }
-
-    return false;
-  }
-
-  public function init()
-  {
-    return array_slice($this->val, 0, count($this->val) - 1);
-  }
-
-  public function head()
-  {
-    return $this->val[0];
-  }
-
-  public function length()
+  public function size()
   {
     return count($this->val);
   }
 
-  /** 
-   * Returns a new list by plucking the same named property off all objects in the list supplied.
-   * CURRENTLY WORK NON-RECURSIVELY
-   * @param String $key The key name to pluck off of each object.
+  /**
+   * Returns all but the first element of the given list or string (or object with a tail method).
    */
-  public function pluck($key)
+  public function tail()
   {
-    $result = [];
-
-    foreach ($this->val as $index => $value) {
-      $result += [$index => $value[$key] ?? null];
-    }
-
-    return $result;
+    return array_slice($this->val, 1);
   }
 
-  public function startsWith($element)
-  {
-    if ($this->val[0] === $element) return true;
-
-    return false;
-  }
-
+  /**
+   * Runs the given function with the supplied object, then returns the object.
+   */
   public function tap($fn)
   {
     $fn($this->val);
 
     return $this;
-  }
-
-  public function tail()
-  {
-    return array_slice($this->val, 1);
   }
 }
