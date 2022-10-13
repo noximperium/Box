@@ -369,6 +369,23 @@ class ImmutableMap
   }
 
   /**
+   * Returns a copy of `ImmutableMap` containing only the keys specified. 
+   * If the key does not exist, the property is ignored.
+   */
+  public function pick($keys)
+  {
+    $result = [];
+
+    foreach ($keys as $key) {
+      if (array_key_exists($key, $this->val)) {
+        $result[$key] = $this->val[$key];
+      }
+    }
+
+    return new ImmutableMap($result);
+  }
+
+  /**
    * Returns current value of ImmutableMap
    * @return array Value of this ImmutableMap
    */

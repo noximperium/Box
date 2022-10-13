@@ -919,7 +919,6 @@ class ImmutableArray
     return min($values);
   }
 
-
   /**
    * Returns true if the collection has no elements.
    */
