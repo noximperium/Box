@@ -1,5 +1,9 @@
 <?php
 
+namespace Container;
+
+use Exception;
+
 class ImmutableMap
 {
   private $val;
@@ -48,5 +52,10 @@ class ImmutableMap
     }
 
     $this->val = $newAssoc;
+  }
+
+  public function val()
+  {
+    return $this->val;
   }
 }

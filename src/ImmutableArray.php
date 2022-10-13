@@ -1,7 +1,8 @@
 <?php
 
-require __DIR__ . DIRECTORY_SEPARATOR . 'BaseListContainer.php';
-require __DIR__ . DIRECTORY_SEPARATOR . 'ImmutableMap.php';
+namespace Container;
+
+use Exception;
 
 class ImmutableArray
 {
@@ -21,7 +22,7 @@ class ImmutableArray
    * Returns a fixed list of size n containing a specified identical value.
    * @param mixed $value The value to repeat.
    * @param int $n The desired size of the output list.
-   * @return array A new array containing `$n` `$value`s.
+   * @return ImmutableArray A new array containing `$n` `$value`s.
    */
   public static function repeat($value, $n)
   {
@@ -165,17 +166,13 @@ class ImmutableArray
    */
   public function dropWhile($predicate)
   {
-    $startIndex = 0;
+    $result = [];
 
-    for ($i = 0; $i < count($this->val); $i++) {
-      $element = $this->val[$i];
-      if (!$predicate($element)) {
-        $startIndex = $i;
-        break;
-      }
+    foreach ($this->val as $value) {
+      if (!$predicate($value)) $result[] = $value;
     }
 
-    return new ImmutableArray(array_slice($this->val, $startIndex));
+    return new ImmutableArray($result);
   }
 
   /**
@@ -214,21 +211,6 @@ class ImmutableArray
     }
 
     return new ImmutableArray($result);
-  }
-
-  public function elementAt($index)
-  {
-    return $this->val[$index];
-  }
-
-  public function elementAtOrElse($index, $defaultValue)
-  {
-    return $this->val[$index] ?? $defaultValue;
-  }
-
-  public function elementAtOrNull($index)
-  {
-    return $this->val[$index] ?? null;
   }
 
   public function filter($predicate)
@@ -307,25 +289,19 @@ class ImmutableArray
     return null;
   }
 
-  public function first($predicate = null)
+  public function first()
   {
     $length = count($this->val);
     if ($length === 0) throw new Exception('The array is empty.');
 
-    if (!$predicate) return $this->val[0];
-
-    foreach ($this->val as $value) {
-      if ($predicate($value)) return $value;
-    }
-
-    throw new Exception('No such element found.');
+    return $this->val[0];
   }
 
   public function firstNotNullOf($transform)
   {
     foreach ($this->val as $value) {
       $result = $transform($value);
-      if ($result !== null) return $result;
+      if ($result !== null) return $value;
     }
 
     throw new Exception('No such element found.');
@@ -335,7 +311,7 @@ class ImmutableArray
   {
     foreach ($this->val as $value) {
       $result = $transform($value);
-      if ($result !== null) return $result;
+      if ($result !== null) return $value;
     }
 
     return null;
@@ -359,7 +335,7 @@ class ImmutableArray
   {
     $result = [];
     foreach ($this->val as $value) {
-      $result = [...$result, ...$transform($value)];
+      $result = array_merge($result, $transform($value));
     }
 
     return new ImmutableArray($result);
@@ -369,7 +345,7 @@ class ImmutableArray
   {
     $result = [];
     foreach ($this->val as $index => $value) {
-      $result = [...$result, ...$transform($index, $value)];
+      $result = array_merge($result, $transform($index, $value));
     }
 
     return new ImmutableArray($result);
@@ -450,6 +426,11 @@ class ImmutableArray
   public function forEachIndexed($action)
   {
     foreach ($this->val as $index => $value) $action($index, $value);
+  }
+
+  public function get($index)
+  {
+    return $this->val[$index];
   }
 
   public function getOrElse($index, $defaultValue)
@@ -856,7 +837,9 @@ class ImmutableArray
   public function sortBy($selector)
   {
     $result = $this->val;
-    usort($result, fn ($a, $b) => $selector($a) - $selector($b));
+    usort($result, function ($a, $b) use ($selector) {
+      return $selector($a) - $selector($b);
+    });
 
     return new ImmutableArray($result);
   }
@@ -864,7 +847,9 @@ class ImmutableArray
   public function sortByDescending($selector)
   {
     $result = $this->val;
-    usort($result, fn ($a, $b) => $selector($b) - $selector($a));
+    usort($result, function ($a, $b) use ($selector) {
+      return $selector($b) - $selector($a);
+    });
 
     return new ImmutableArray($result);
   }

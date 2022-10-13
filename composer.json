@@ -3,5 +3,18 @@
   "description": "",
   "require": {
     "php": ">=7.3"
+  },
+  "require-dev": {
+    "pestphp/pest": "^1.22"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Container\\": "src/"
+    }
   }
 }
