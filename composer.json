@@ -1,5 +1,5 @@
 {
-  "name": "kakalition/collection-container",
+  "name": "noximperium/collection-container",
   "description": "",
   "require": {
     "php": ">=7.3"
@@ -14,7 +14,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Container\\": "src/"
+      "NoxImperium\\Container\\": "src/"
     }
   }
 }

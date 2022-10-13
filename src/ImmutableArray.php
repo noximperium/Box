@@ -1,6 +1,6 @@
 <?php
 
-namespace Container;
+namespace NoxImperium\Container;
 
 use Exception;
 

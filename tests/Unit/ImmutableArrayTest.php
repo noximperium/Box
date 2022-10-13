@@ -1,6 +1,6 @@
 <?php
 
-use Container\ImmutableArray;
+use NoxImperium\Container\ImmutableArray;
 
 test('asserts instance of ImmutableArray', function () {
   $container = ImmutableArray::of([]);
