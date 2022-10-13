@@ -2,6 +2,8 @@
 
 namespace NoxImperium\Container;
 
+use Exception;
+
 class ImmutableMap
 {
   private $val;
@@ -11,8 +13,15 @@ class ImmutableMap
     $this->val = $init;
   }
 
-  public static function of($init)
+  /**
+   * Returns an instance of ImmutableMap with passed initial value.
+   * @param array $init An initial value.
+   * @return ImmutableMap A new instance of ImmutableMap
+   */
+  public static function of($init = [])
   {
+    if (gettype($init) !== 'array') throw new Exception('Initial value must be an array');
+
     return new ImmutableMap($init);
   }
 
