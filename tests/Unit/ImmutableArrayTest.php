@@ -6,7 +6,7 @@ test('asserts instance of ImmutableArray', function () {
   $container = ImmutableArray::of([]);
   $type = get_class($container);
 
-  expect($type)->toBe('Container\\ImmutableArray');
+  expect($type)->toBe('NoxImperium\\Container\\ImmutableArray');
 });
 
 test('asserts initial content of ImmutableArray is empty', function () {
