@@ -511,8 +511,8 @@ class ImmutableArray
   public function flatMap($transform)
   {
     $result = [];
-    foreach ($this->val as $value) {
-      $result = array_merge($result, $transform($value));
+    foreach ($this->val as $key => $value) {
+      $result = array_merge($result, $transform($value, $key));
     }
 
     return new ImmutableArray($result);
@@ -836,13 +836,14 @@ class ImmutableArray
 
   /**
    * Returns a list containing the results of applying the given transform function to each element in the original collection.
+   * @param callable $transform Received `$value` and `$key`
    */
   public function map($transform)
   {
     $result = [];
 
-    foreach ($this->val as $value) {
-      $result[] = $transform($value);
+    foreach ($this->val as $key => $value) {
+      $result[] = $transform($value, $key);
     }
 
     return new ImmutableArray($result);
@@ -891,6 +892,33 @@ class ImmutableArray
 
     return new ImmutableArray($result);
   }
+
+  /**
+   * Returns max value of this `ImmutableArray` (on specified path if supplied).
+   */
+  public function max($path = null)
+  {
+    if ($path === null && !$this->isContentScalar()) throw new Exception('Contents is not scalar.');
+
+    if ($path) $values = $this->pluck($path)->val;
+    else $values = $this->val;
+
+    return max($values);
+  }
+
+  /**
+   * Returns min value of this `ImmutableArray` (on specified path if supplied).
+   */
+  public function min($path = null)
+  {
+    if ($path === null && !$this->isContentScalar()) throw new Exception('Contents is not scalar.');
+
+    if ($path) $values = $this->pluck($path)->val;
+    else $values = $this->val;
+
+    return min($values);
+  }
+
 
   /**
    * Returns true if the collection has no elements.
@@ -953,11 +981,11 @@ class ImmutableArray
 
   /** 
    * Returns a new list by plucking the same named property off all objects in the list supplied.
-   * @param String $key The key name to pluck off of each object.
+   * @param array|String $path The key name to pluck off of each object.
    */
-  public function pluck($key)
+  public function pluck($path)
   {
-    $keys = explode('.', $key);
+    if (gettype($path) === 'string') $keys = explode('.', $path);
 
     $result = array_map(function ($value) use ($keys) {
       $ref = $value;
