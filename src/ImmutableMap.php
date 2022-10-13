@@ -2,8 +2,6 @@
 
 namespace NoxImperium\Container;
 
-use Exception;
-
 class ImmutableMap
 {
   private $val;
@@ -18,11 +16,17 @@ class ImmutableMap
     return new ImmutableMap($init);
   }
 
+  /**
+   * Returns an array of all keys in this map.
+   */
   public function keys()
   {
     return array_keys($this->val);
   }
 
+  /**
+   * Returns an array of all values in this map.
+   */
   public function values()
   {
     return array_values($this->val);
@@ -117,32 +121,143 @@ class ImmutableMap
   }
 
   /**
-   * Associates the specified value with the specified key in the map.
-   * @return mixed Return the previous value associated with the key, or null if the key was not present in the map.
+   * Returns whether or not an object has an own property with the specified name.
+   * @param String $key A key to check.
+   * @return boolean Whether or not an object has an own property with the specified name.
    */
-  public function put($key, $value)
+  public function has($key)
   {
-    $isExists = array_key_exists($key, $this->val);
-    if (!$isExists) return null;
-
-    $currentValue = $this->val[$key];
-    $this->val[$key] = $value;
+    return array_key_exists($key, $this->val);
   }
 
-  public function toPath($path)
+  /**
+   * Returns whether or not a path exists in a map.
+   * @param array|String $path A path to check.
+   * @return boolean Whether or not a path exists in a map.
+   */
+  public function hasPath($path)
   {
-    $newAssoc = $this->val;
+    if (gettype($path) === 'string') $path = explode('.', $path);
+
+    $ref = $this->val;
 
     foreach ($path as $key) {
-      $exists = array_key_exists($key, $newAssoc);
-
-      if (!$exists) throw new Exception("Assoc with key '$key' doesn't exists.");
-      $newAssoc = $newAssoc[$key];
+      if (!array_key_exists($key, $ref)) return false;
+      else $ref = $ref[$key];
     }
 
-    $this->val = $newAssoc;
+    return true;
   }
 
+  /**
+   * Creates a copy of the passed object by applying an fn function to the given key property.
+   * @param String $key Key to target.
+   * @param callable $fn Function to apply to the property.
+   * @return ImmutableMap The transformed map.
+   */
+  public function modify($key, $fn)
+  {
+    $isKeyExists = array_key_exists($key, $this->val);
+    if (!$isKeyExists) return $this;
+
+    $new = $this->val;
+    $new[$key] = $fn($new[$key]);
+    return new ImmutableMap($new);
+  }
+
+  /**
+   * Creates a clone of current ImmutableMap by applying an fn function to the value at the given path.
+   * @param array|String $path Path to property.
+   * @param $fn Function to apply to the property.
+   * @return ImmutableMap The transformed map.
+   */
+  public function modifyPath($path, $fn)
+  {
+    if (gettype($path) === 'string') $path = explode('.', $path);
+
+    $lastIndex = count($path) - 1;
+    $new = $this->val;
+    $ref = &$new;
+
+    foreach ($path as $index => $key) {
+      $isKeyExists = array_key_exists($key, $ref);
+      if (!$isKeyExists) return $this;
+
+      $isLastIndex = $index === $lastIndex;
+      if ($isLastIndex) $ref[$key] = $fn($ref[$key]);
+      else $ref = &$ref[$key];
+    }
+
+    return new ImmutableMap($new);
+  }
+
+  /**
+   * Returns a copy of this ImmutableMap with omitted keys specified.
+   * @param array $keys Keys to omit.
+   * @return ImmutableMap The transformed map.
+   */
+  public function omit($keys)
+  {
+    $new = $this->val;
+
+    foreach ($keys as $key) {
+      unset($new[$key]);
+    }
+
+    return new ImmutableMap($new);
+  }
+
+  /**
+   * Retrieve the value at a given path.
+   * @param array|String $path Path to property.
+   * @return mixed Property on `$path`.
+   */
+  public function path($path)
+  {
+    if (gettype($path) === 'string') $path = explode('.', $path);
+
+    $newValue = $this->val;
+
+    foreach ($path as $key) {
+      $exists = array_key_exists($key, $newValue);
+
+      if (!$exists) return null;
+      $newValue = $newValue[$key];
+    }
+
+    return $newValue;
+  }
+
+  /**
+   * Determines whether a nested path on the map has a specific value.
+   * @param array|String $path Path to property.
+   * @param mixed $value Value to check.
+   * @return boolean Whether the value on path is equal with `$value`.
+   */
+  public function pathEq($path, $value)
+  {
+    $pathValue = $this->path($path);
+
+    return $pathValue === $value;
+  }
+
+  /**
+   * Returns the value at that path if available. Otherwise returns the provided default value.
+   * @param array|String $path Path to property.
+   * @param mixed $default The default value.
+   * @return mixed Value at specified path or null.
+   */
+  public function pathOr($path, $default)
+  {
+    $pathValue = $this->path($path);
+
+    return $pathValue ?? $default;
+  }
+
+  /**
+   * Returns current value of ImmutableMap
+   * @return array Value of this ImmutableMap
+   */
   public function val()
   {
     return $this->val;
