@@ -3,6 +3,7 @@
 namespace NoxImperium\Container;
 
 use Exception;
+use PhpParser\Node\Expr\Exit_;
 
 class ImmutableArray
 {
@@ -125,6 +126,16 @@ class ImmutableArray
 
     $this->val[] = $element;
     return new ImmutableArray($this->val);
+  }
+
+  public function average($path = null)
+  {
+    if ($path === null && !$this->isContentScalar()) throw new Exception('Contents is not scalar.');
+
+    if ($path) $values = $this->pluck($path)->val;
+    else $values = $this->val;
+
+    return array_sum($values) / count($values);
   }
 
   /**
@@ -1353,5 +1364,14 @@ class ImmutableArray
     $fn($this->val);
 
     return $this;
+  }
+
+  private function isContentScalar()
+  {
+    foreach ($this->val as $value) {
+      if (gettype($value) === 'array') return false;
+    }
+
+    return true;
   }
 }
