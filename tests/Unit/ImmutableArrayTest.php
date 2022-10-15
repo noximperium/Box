@@ -558,3 +558,90 @@ test('asserts groupBy behaves correctly', function () {
     'Hundreds' => [100, 120, 150],
   ]);
 });
+
+test('asserts path behaves correctly', function () {
+  $container = ImmutableArray::of([
+    ['name' => 'Atlas', 'age' => '81', 'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]],
+    ['name' => 'Rui', 'age' => '20', 'contact' => [
+      'provider' => 'github',
+      'wa' => '0985823423',
+      'line' => '@rui'
+    ]],
+    ['name' => 'Kaka', 'age' => '21', 'contact' => [
+      'provider' => 'github',
+      'wa' => '08412121873',
+      'line' => '@kaka'
+    ]],
+    ['name' => 'Gildur', 'age' => '72', 'contact' => [
+      'provider' => 'gitlab',
+      'wa' => '085747342121',
+      'line' => '@gildur'
+    ]],
+  ]);
+
+  $sut = $container->path("1.age");
+
+  expect($sut)->toBe('20');
+});
+
+test('asserts pathEq behaves correctly', function () {
+  $container = ImmutableArray::of([
+    ['name' => 'Atlas', 'age' => '81', 'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]],
+    ['name' => 'Rui', 'age' => '20', 'contact' => [
+      'provider' => 'github',
+      'wa' => '0985823423',
+      'line' => '@rui'
+    ]],
+    ['name' => 'Kaka', 'age' => '21', 'contact' => [
+      'provider' => 'github',
+      'wa' => '08412121873',
+      'line' => '@kaka'
+    ]],
+    ['name' => 'Gildur', 'age' => '72', 'contact' => [
+      'provider' => 'gitlab',
+      'wa' => '085747342121',
+      'line' => '@gildur'
+    ]],
+  ]);
+
+  $sut = $container->pathEq("1.age", '20');
+
+  expect($sut)->toBe(true);
+});
+
+test('asserts pathOr behaves correctly', function () {
+  $container = ImmutableArray::of([
+    ['name' => 'Atlas', 'age' => '81', 'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]],
+    ['name' => 'Rui', 'age' => '20', 'contact' => [
+      'provider' => 'github',
+      'wa' => '0985823423',
+      'line' => '@rui'
+    ]],
+    ['name' => 'Kaka', 'age' => '21', 'contact' => [
+      'provider' => 'github',
+      'wa' => '08412121873',
+      'line' => '@kaka'
+    ]],
+    ['name' => 'Gildur', 'age' => '72', 'contact' => [
+      'provider' => 'gitlab',
+      'wa' => '085747342121',
+      'line' => '@gildur'
+    ]],
+  ]);
+
+  $sut = $container->pathOr('5.age', 'Unknown');
+
+  expect($sut)->toBe('Unknown');
+});
