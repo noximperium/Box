@@ -116,7 +116,7 @@ interface BaseList extends BaseCollection
   public function flatten();
 
   /**
-   * Performs the given action on each element, providing sequential index with the element.
+   * Performs the given action on each element, providing key associated with the element.
    */
   public function forEachIndexed($action);
 
@@ -145,6 +145,16 @@ interface BaseList extends BaseCollection
    * with its index in the original collection.
    */
   public function foldRightIndexed($initial, $operation);
+
+  /**
+   * Returns the element at the given index and cast it to ImmutableList
+   */
+  public function getAsList($index);
+
+  /**
+   * Returns the element at the given path and cast it to ImmutableList
+   */
+  public function getOnPathAsList($index);
 
   /**
    * Groups elements of the original list by the key returned by the given groupKeySelector function applied to each element 

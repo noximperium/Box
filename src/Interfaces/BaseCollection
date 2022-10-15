@@ -50,8 +50,12 @@ interface BaseCollection
   public function getOnPathOrElse($path, $default);
 
   /**
+   * Returns elements at the given paths.
+   */
+  public function getOnPaths($paths);
+
+  /**
    * Returns true if no elements match the given predicate.
    */
   public function none($bipredicate);
-
 }

@@ -4,46 +4,124 @@ namespace NoxImperium\Container\Interfaces;
 
 interface BaseMap extends BaseCollection
 {
-  public function containsPath($path);
-  public function filterKeys($predicate);
-  public function filterValues($predicate);
+  /**
+   * Returns true if the map contains the specified key.
+   */
+  public function containsKey($key);
 
-  // Classified
-  public function foldKeyed($trifunction);
-  public function foldRightKeyed($trifunction);
-  public function getOrPut($index, $default);
-  public function mapKeyed($bifunction);
-  public function modify($key, $bifunction);
-  public function modifyPath($path, $bifunction);
-  public function onEachKeyed($biconsumer);
+  /**
+   * Returns true if the map contains the specified value.
+   */
+  public function containsValue($value);
+
+  /**
+   * Returns true if the map contains the specified path.
+   */
+  public function containsPath($path);
+
+  /**
+   * Performs the given action on each element, providing key associated with the element.
+   */
+  public function forEachKeyed($action);
+
+  /**
+   * Returns the element at the given index and cast it to ImmutableMap
+   */
+  public function getAsMap($key);
+
+  /**
+   * Returns the element at the given path and cast it to ImmutableMap
+   */
+  public function getOnPathAsMap($path);
+
+  /**
+   * Returns a list of all keys in this map.
+   */
+  public function keys();
+
+  /**
+   * Create a new map with the this own properties merged with the own properties of the other map. 
+   * If a key exists in both objects, the value from the this map will be used.
+   */
+  public function mergeLeft($other);
+
+  /**
+   * Create a new map with the this own properties merged with the own properties of the other map. 
+   * If a key exists in both maps, the value from the this map will be used (if both of it is map too, they will be recursively merged).
+   */
+  public function mergeDeepLeft($other);
+
+  /**
+   * Create a new map with the this own properties merged with the own properties of the other map. 
+   * If a key exists in both maps, the value from other map will be used.
+   */
+  public function mergeRight($other);
+
+  /**
+   * Create a new map with the this own properties merged with the own properties of the other map. 
+   * If a key exists in both maps, the value from other map will be used (if both of it is map too, they will be recursively merged).
+   */
+  public function mergeDeepRight($other);
+
+  /**
+   * Create a new map with the this own properties merged with the own properties of the other map. 
+   * If a key exists in both maps, resolver function will be used to resolve conflict.
+   */
+  public function mergeWith($map);
+
+  /**
+   * Create a new map with the this own properties merged with the own properties of the other map. 
+   * If a key exists in both maps, resolver function will be used to resolve conflict (if both of it is map too, they will be recursively merged).
+   */
+  public function mergeDeepWith($map);
+
+  /**
+   * Returns a map with specified key transformed by transform function.
+   */
+  public function modify($key, $transform);
+
+  /**
+   * Returns a map with specified path transformed by transform function.
+   */
+  public function modifyPath($path, $transform);
+
+  /**
+   * Returns a map without specified key.
+   */
   public function omit($path);
+
+  /**
+   * Performs the given action on each value and returns the map itself afterwards.
+   */
+  public function onEach($action);
+
+  /**
+   * Performs the given action on each value and key that associtated with it and returns the map itself afterwards.
+   */
+  public function onEachKeyed($action);
+
+  /**
+   * Associates the specified value with the specified key in the map.
+   */
   public function put($key, $value);
-  public function putAll($assoc);
+
+  /**
+   * Associates the specified value with the specified path in the map.
+   */
+  public function putOnPath($path, $value);
+
+  /**
+   * Removes the specified key and its corresponding value from this map.
+   */
   public function remove($key);
 
-  public function get($key);
-  public function getOrNull($key);
+  /**
+   * Removes the specified path and its corresponding value from this map.
+   */
+  public function removeOnPath($key);
 
-  public function all($bipredicate);
-  public function any($bipredicate);
-  public function contains($key);
-  public function count($bipredicate);
-  public function filter($bipredicate);
-  public function filterNot($bipredicate);
-  public function fold($trifunction);
-  public function foldRight($trifunction);
-  public function forEach($biconsumer);
-  public function groupBy($groupKeySelector, $valueTransform);
-  public function groupByKeyed($groupKeySelector, $keyTransform, $valueTransform);
-  public function head();
-  public function keys();
-  public function map($function);
-  public function mapNotNull($function);
-  public function none($bipredicate);
-  public function path($path);
-  public function onEach($biconsumer);
-  public function reduce($trifunction);
-  public function reduceRight($trifunction);
-  public function tail();
+  /**
+   * Returns a list of all values in this map.
+   */
   public function values();
 }
