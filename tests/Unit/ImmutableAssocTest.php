@@ -1,16 +1,16 @@
 <?php
 
-use NoxImperium\Container\ImmutableMap;
+use NoxImperium\Container\ImmutableAssoc;
 
-test('asserts instance of ImmutableMap', function () {
-  $container = ImmutableMap::of([]);
+test('asserts instance of ImmutableAssoc', function () {
+  $container = ImmutableAssoc::of([]);
   $type = get_class($container);
 
-  expect($type)->toBe('NoxImperium\\Container\\ImmutableMap');
+  expect($type)->toBe('NoxImperium\\Container\\ImmutableAssoc');
 });
 
-test('asserts initial content of ImmutableMap is empty', function () {
-  $container = ImmutableMap::of([]);
+test('asserts initial content of ImmutableAssoc is empty', function () {
+  $container = ImmutableAssoc::of([]);
   $val = $container->val();
   $length = count($val);
 
@@ -18,10 +18,10 @@ test('asserts initial content of ImmutableMap is empty', function () {
 });
 
 test('asserts assoc behaves correctly', function () {
-  $container = ImmutableMap::of([]);
+  $container = ImmutableAssoc::of([]);
 
   $sutOne = $container
-    ->assoc('name', 'Kaka')
+    ->put('name', 'Kaka')
     ->val();
 
   expect($sutOne)->toBe([
@@ -29,8 +29,8 @@ test('asserts assoc behaves correctly', function () {
   ]);
 
   $sutTwo = $container
-    ->assoc('name', 'Kaka')
-    ->assoc('name', 'Rui')
+    ->put('name', 'Kaka')
+    ->put('name', 'Rui')
     ->val();
 
   expect($sutTwo)->toBe([
@@ -39,10 +39,10 @@ test('asserts assoc behaves correctly', function () {
 });
 
 test('asserts assocPath behaves correctly', function () {
-  $container = ImmutableMap::of([]);
+  $container = ImmutableAssoc::of([]);
 
   $sutOne = $container
-    ->assocPath(['persons', 'kaka', 'full_name'], 'Kharisma Sri Wibowo')
+    ->putPath(['persons', 'kaka', 'full_name'], 'Kharisma Sri Wibowo')
     ->val();
 
   expect($sutOne)->toBe([
@@ -54,8 +54,8 @@ test('asserts assocPath behaves correctly', function () {
   ]);
 
   $sutTwo = $container
-    ->assocPath(['persons', 'kaka', 'full_name'], 'Kharisma Sri Wibowo')
-    ->assocPath(['persons', 'kaka', 'age'], 21)
+    ->putPath(['persons', 'kaka', 'full_name'], 'Kharisma Sri Wibowo')
+    ->putPath(['persons', 'kaka', 'age'], 21)
     ->val();
 
   expect($sutTwo)->toBe([
@@ -68,10 +68,10 @@ test('asserts assocPath behaves correctly', function () {
   ]);
 
   $sutThree = $container
-    ->assocPath(['persons', 'kaka', 'full_name'], 'Kharisma Sri Wibowo')
-    ->assocPath(['persons', 'kaka', 'full_name'], 'Kharisma Sri Wibowo')
-    ->assocPath(['persons', 'kaka', 'age'], 21)
-    ->assocPath(['persons', 'kaka', 'age'], ['2001' => 0, '2022' => 21])
+    ->putPath(['persons', 'kaka', 'full_name'], 'Kharisma Sri Wibowo')
+    ->putPath(['persons', 'kaka', 'full_name'], 'Kharisma Sri Wibowo')
+    ->putPath(['persons', 'kaka', 'age'], 21)
+    ->putPath(['persons', 'kaka', 'age'], ['2001' => 0, '2022' => 21])
     ->val();
 
   expect($sutThree)->toBe([
@@ -87,10 +87,10 @@ test('asserts assocPath behaves correctly', function () {
   ]);
 
   $sutFour = $container
-    ->assocPath('persons.kaka.full_name', 'Kharisma Sri Wibowo')
-    ->assocPath('persons.kaka.full_name', 'Kharisma Sri Wibowo')
-    ->assocPath('persons.kaka.age', 21)
-    ->assocPath('persons.kaka.age', ['2001' => 0, '2022' => 21])
+    ->putPath('persons.kaka.full_name', 'Kharisma Sri Wibowo')
+    ->putPath('persons.kaka.full_name', 'Kharisma Sri Wibowo')
+    ->putPath('persons.kaka.age', 21)
+    ->putPath('persons.kaka.age', ['2001' => 0, '2022' => 21])
     ->val();
 
   expect($sutFour)->toBe([
@@ -107,13 +107,13 @@ test('asserts assocPath behaves correctly', function () {
 });
 
 test('asserts dissoc behaves correctly', function () {
-  $container = ImmutableMap::of([
+  $container = ImmutableAssoc::of([
     'name' => 'Kaka',
     'age' => 21
   ]);
 
   $sut = $container
-    ->dissoc('name')
+    ->remove('name')
     ->val();
 
   expect($sut)->toBe([
@@ -122,7 +122,7 @@ test('asserts dissoc behaves correctly', function () {
 });
 
 test('asserts dissocPath behaves correctly', function () {
-  $container = ImmutableMap::of([
+  $container = ImmutableAssoc::of([
     'persons' => [
       'kaka' => [
         'full_name' => 'Kharisma Sri Wibowo',
@@ -142,13 +142,13 @@ test('asserts dissocPath behaves correctly', function () {
   ]);
 
   $sutOne = $container
-    ->dissocPath('persons')
+    ->removePath('persons')
     ->val();
 
   expect($sutOne)->toBe([]);
 
   $sutTwo = $container
-    ->dissocPath('persons.kaka')
+    ->removePath('persons.kaka')
     ->val();
 
   expect($sutTwo)->toBe([
@@ -164,7 +164,7 @@ test('asserts dissocPath behaves correctly', function () {
   ]);
 
   $sutThree = $container
-    ->dissocPath('persons.kaka.age.2001')
+    ->removePath('persons.kaka.age.2001')
     ->val();
 
   expect($sutThree)->toBe([
@@ -187,7 +187,7 @@ test('asserts dissocPath behaves correctly', function () {
 });
 
 test('asserts has behaves correctly', function () {
-  $container = ImmutableMap::of([
+  $container = ImmutableAssoc::of([
     'name' => 'Kaka',
     'age' => 21
   ]);
@@ -197,7 +197,7 @@ test('asserts has behaves correctly', function () {
 });
 
 test('asserts hasPath behaves correctly', function () {
-  $container = ImmutableMap::of([
+  $container = ImmutableAssoc::of([
     'name' => 'Kaka',
     'age' => 21,
     'account' => [
@@ -214,7 +214,7 @@ test('asserts hasPath behaves correctly', function () {
 });
 
 test('asserts modify behaves correctly', function () {
-  $container = ImmutableMap::of([
+  $container = ImmutableAssoc::of([
     'name' => 'Kaka',
     'age' => 21
   ]);
@@ -239,7 +239,7 @@ test('asserts modify behaves correctly', function () {
 });
 
 test('asserts modifyPath behaves correctly', function () {
-  $container = ImmutableMap::of([
+  $container = ImmutableAssoc::of([
     'name' => 'Kaka',
     'age' => 21,
     'account' => [
@@ -276,7 +276,7 @@ test('asserts modifyPath behaves correctly', function () {
 });
 
 test('asserts omit behaves correctly', function () {
-  $container = ImmutableMap::of([
+  $container = ImmutableAssoc::of([
     'name' => 'Kaka',
     'age' => 21,
     'account' => [
@@ -293,7 +293,7 @@ test('asserts omit behaves correctly', function () {
 });
 
 test('asserts path behaves correctly', function () {
-  $container = ImmutableMap::of([
+  $container = ImmutableAssoc::of([
     'name' => 'Kaka',
     'age' => 21
   ]);
@@ -302,7 +302,7 @@ test('asserts path behaves correctly', function () {
   expect($sutOne)->toBe('Kaka');
 
   $sutTwo = $container
-    ->assoc('account', [
+    ->put('account', [
       'email' => 'gmail',
       'vcs' => 'github'
     ])
@@ -314,7 +314,7 @@ test('asserts path behaves correctly', function () {
   ]);
 
   $sutThree = $container
-    ->assoc('account', [
+    ->put('account', [
       'email' => 'gmail',
       'vcs' => 'github'
     ])
@@ -324,7 +324,7 @@ test('asserts path behaves correctly', function () {
 });
 
 test('asserts pathEq behaves correctly', function () {
-  $container = ImmutableMap::of([
+  $container = ImmutableAssoc::of([
     'name' => 'Kaka',
     'age' => 21,
     'account' => [
@@ -341,7 +341,7 @@ test('asserts pathEq behaves correctly', function () {
 });
 
 test('asserts pathOr behaves correctly', function () {
-  $container = ImmutableMap::of([
+  $container = ImmutableAssoc::of([
     'name' => 'Kaka',
     'age' => 21,
     'account' => [

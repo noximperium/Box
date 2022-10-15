@@ -3,7 +3,6 @@
 namespace NoxImperium\Container;
 
 use Exception;
-use PhpParser\Node\Expr\Exit_;
 
 class ImmutableArray
 {
@@ -43,24 +42,27 @@ class ImmutableArray
     return new ImmutableArray($result);
   }
 
+  /**
+   * Returns current value of ImmutableAssoc
+   * @return array Value of this ImmutableAssoc
+   */
   public function val()
   {
     return $this->val;
   }
 
   /**
-   * Applies a function to the value at the given index of an array, 
-   * returning a new copy of the array with the element at the given index replaced with the result of the function application.
+   * Update a value at a specific index with the result of the provided function. 
    * @param int $index The index.
-   * @param callable $fn The function to apply.
+   * @param callable $function The function to apply.
    * @return ImmutableArray A copy of the supplied array-like object with the element at index `$idx` replaced with the value returned by applying `$fn` to the existing element.
    */
-  public function adjust($index, $fn)
+  public function adjust($index, $function)
   {
     $exists = array_key_exists($index, $this->val);
     if (!$exists) throw new Exception('Index not found.');
 
-    $this->val[$index] = $fn($this->val[$index]);
+    $this->val[$index] = $function($this->val[$index]);
 
     return new ImmutableArray($this->val);
   }
@@ -135,7 +137,7 @@ class ImmutableArray
   {
     if ($path === null && !$this->isContentScalar()) throw new Exception('Contents is not scalar.');
 
-    if ($path) $values = $this->pluck($path)->val;
+    if ($path) $values = $this->pluck($path, 0)->val;
     else $values = $this->val;
 
     return array_sum($values) / count($values);
@@ -213,7 +215,7 @@ class ImmutableArray
       else $result += [$key => 1];
     }
 
-    return ImmutableMap::of($result);
+    return ImmutableAssoc::of($result);
   }
 
   /**
@@ -679,7 +681,7 @@ class ImmutableArray
    * returns a map where each group key is associated with a list of corresponding values.
    * @param callable $keySelector
    * @param callable $valueTransform
-   * @return ImmutableMap 
+   * @return ImmutableAssoc 
    */
   public function groupBy($keySelector, $valueTransform = null)
   {
@@ -694,7 +696,7 @@ class ImmutableArray
       else $result += [$key => [$value]];
     }
 
-    return ImmutableMap::of($result);
+    return ImmutableAssoc::of($result);
   }
 
   /**
@@ -900,7 +902,7 @@ class ImmutableArray
   {
     if ($path === null && !$this->isContentScalar()) throw new Exception('Contents is not scalar.');
 
-    if ($path) $values = $this->pluck($path)->val;
+    if ($path) $values = $this->pluck($path, 0)->val;
     else $values = $this->val;
 
     return max($values);
@@ -913,7 +915,7 @@ class ImmutableArray
   {
     if ($path === null && !$this->isContentScalar()) throw new Exception('Contents is not scalar.');
 
-    if ($path) $values = $this->pluck($path)->val;
+    if ($path) $values = $this->pluck($path, 0)->val;
     else $values = $this->val;
 
     return min($values);
@@ -978,20 +980,68 @@ class ImmutableArray
     return new ImmutableArray([$satisfy, $dissatisfy]);
   }
 
+  /**
+   * Retrieve the value at a given path.
+   * @param array|String $path Path to property.
+   * @return mixed Property on `$path`.
+   */
+  public function path($path)
+  {
+    if (gettype($path) === 'string') $path = explode('.', $path);
+
+    $newValue = $this->val;
+
+    foreach ($path as $key) {
+      $exists = array_key_exists($key, $newValue);
+
+      if (!$exists) return null;
+      $newValue = $newValue[$key];
+    }
+
+    return $newValue;
+  }
+
+  /**
+   * Determines whether a nested path on the map has a specific value.
+   * @param array|String $path Path to property.
+   * @param mixed $value Value to check.
+   * @return boolean Whether the value on path is equal with `$value`.
+   */
+  public function pathEq($path, $value)
+  {
+    $pathValue = $this->path($path);
+
+    return $pathValue === $value;
+  }
+
+  /**
+   * Returns the value at that path if available. Otherwise returns the provided default value.
+   * @param array|String $path Path to property.
+   * @param mixed $default The default value.
+   * @return mixed Value at specified path or null.
+   */
+  public function pathOr($path, $default)
+  {
+    $pathValue = $this->path($path);
+
+    return $pathValue ?? $default;
+  }
+
+
   /** 
    * Returns a new list by plucking the same named property off all objects in the list supplied.
    * @param array|String $path The key name to pluck off of each object.
    */
-  public function pluck($path)
+  public function pluck($path, $default)
   {
     if (gettype($path) === 'string') $keys = explode('.', $path);
 
-    $result = array_map(function ($value) use ($keys) {
+    $result = array_map(function ($value) use ($keys, $default) {
       $ref = $value;
 
       foreach ($keys as $key) {
         if (array_key_exists($key, $ref)) $ref = $ref[$key];
-        else return null;
+        else return $default;
       }
 
       return $ref;
