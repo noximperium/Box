@@ -241,7 +241,7 @@ interface BaseList extends BaseCollection
    * Performs the given action on each element, providing sequential index with the element, 
    * and returns the collection itself afterwards.
    */
-  public function onEachIndexed($biconsumer);
+  public function onEachIndexed($action);
 
   /**
    * Returns a new list by plucking the property on specified path of every object in this list.

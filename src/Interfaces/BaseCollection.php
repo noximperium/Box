@@ -57,5 +57,10 @@ interface BaseCollection
   /**
    * Returns true if no elements match the given predicate.
    */
-  public function none($bipredicate);
+  public function none($predicate);
+
+  /**
+   * Returns current value of Collection
+   */
+  public function val();
 }
