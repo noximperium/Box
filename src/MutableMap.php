@@ -4,7 +4,7 @@ namespace NoxImperium\Container;
 
 use NoxImperium\Container\Interfaces\BaseMap;
 
-class ImmutableMap implements BaseMap
+class MutableMap implements BaseMap
 {
   public function all($predicate)
   {
