@@ -138,18 +138,6 @@ class MapFunction
     return $result;
   }
 
-  private function _mergeDeep(&$map, $other)
-  {
-    $result = &$map;
-    foreach ($other as $key => $value) {
-      $leftExists = isset($result[$key]);
-      $bothArray = $leftExists ? gettype($result[$key]) === 'array' && gettype($value) === 'array' : false;
-
-      if ($leftExists && $bothArray) $this->_mergeDeepLeft($map[$key], $value);
-      else if (!$leftExists) $result[$key] = $value;
-    }
-  }
-
   private function _mergeDeepLeft(&$map, $other)
   {
     $result = &$map;
@@ -170,25 +158,39 @@ class MapFunction
 
   public function mergeRight($map, $other)
   {
-    $result = $other;
-    foreach ($map as $key => $value) {
-      $exists = isset($result[$key]);
-      if (!$exists) $result[$key] = $value;
+    $result = $map;
+    foreach ($other as $key => $value) {
+      $result[$key] = $value;
     }
 
     return $result;
   }
 
+  private function _mergeDeepRight(&$map, $other)
+  {
+    $result = &$map;
+    foreach ($other as $key => $value) {
+      $leftExists = isset($result[$key]);
+      $bothArray = $leftExists ? gettype($result[$key]) === 'array' && gettype($value) === 'array' : false;
+
+      if ($leftExists && $bothArray) $this->_mergeDeepRight($map[$key], $value);
+      else $result[$key] = $value;
+    }
+  }
+
+
   public function mergeDeepRight($map, $other)
   {
-    $this->_mergeDeep($other, $map);
-    return $other;
+    $this->_mergeDeepRight($map, $other);
+    return $map;
   }
 
-  public function mergeWith($transform, $other, $map)
+  // TO BE IMPLEMENTED LATER
+  public function mergeWith($transform, $map, $other)
   {
   }
 
+  // TO BE IMPLEMENTED LATER
   public function mergeDeepWith($transform, $other, $map)
   {
   }
