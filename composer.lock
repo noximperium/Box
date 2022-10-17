@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "039973338f93c4bde7f1439cb797fea7",
+    "content-hash": "646fce6c24a0ba37c5b2d478069544cc",
     "packages": [],
     "packages-dev": [
         {
@@ -2180,6 +2180,45 @@
                 }
             ],
             "time": "2020-09-28T06:39:44+00:00"
+        },
+        {
+            "name": "subiabre/appgati",
+            "version": "v2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/subiabre/appgati.git",
+                "reference": "5b0fe00547aeaaa53cb51f7d64d8631c14ddfeab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/subiabre/appgati/zipball/5b0fe00547aeaaa53cb51f7d64d8631c14ddfeab",
+                "reference": "5b0fe00547aeaaa53cb51f7d64d8631c14ddfeab",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Facu",
+                    "email": "subiabrewd@gmail.com"
+                }
+            ],
+            "description": "Package to gauge PHP app's performance. Based on original appgati.",
+            "support": {
+                "source": "https://github.com/subiabre/appgati/tree/v2.0"
+            },
+            "time": "2020-08-22T05:21:48+00:00"
         },
         {
             "name": "symfony/console",
