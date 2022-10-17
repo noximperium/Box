@@ -1,6 +1,6 @@
 <?php
 
-namespace NoxImperium\Container\Interfaces;
+namespace NoxImperium\Box\Interfaces;
 
 interface BaseMap extends BaseCollection
 {

@@ -1,8 +1,9 @@
 <?php
 
-namespace NoxImperium\Container;
+namespace NoxImperium\Box;
 
-use NoxImperium\Container\Interfaces\BaseList;
+use NoxImperium\Box\Functions\ListFunction;
+use NoxImperium\Box\Interfaces\BaseList;
 
 class MutableList implements BaseList
 {

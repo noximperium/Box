@@ -1,6 +1,6 @@
 <?php
 
-namespace NoxImperium\Container;
+namespace NoxImperium\Box\Functions;
 
 use Exception;
 

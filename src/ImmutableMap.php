@@ -1,8 +1,9 @@
 <?php
 
-namespace NoxImperium\Container;
+namespace NoxImperium\Box;
 
-use NoxImperium\Container\Interfaces\BaseMap;
+use NoxImperium\Box\Functions\MapFunction;
+use NoxImperium\Box\Interfaces\BaseMap;
 
 class ImmutableMap implements BaseMap
 {

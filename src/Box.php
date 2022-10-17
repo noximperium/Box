@@ -1,9 +1,9 @@
 <?php
 
-namespace NoxImperium\Container;
+namespace NoxImperium\Box;
 
-use NoxImperium\Container\ImmutableList;
-use NoxImperium\Container\MutableList;
+use NoxImperium\Box\ImmutableList;
+use NoxImperium\Box\MutableList;
 
 class Box
 {

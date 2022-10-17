@@ -1,6 +1,6 @@
 <?php
 
-namespace NoxImperium\Container\Interfaces;
+namespace NoxImperium\Box\Interfaces;
 
 interface BaseList extends BaseCollection
 {
@@ -419,7 +419,7 @@ interface BaseList extends BaseCollection
    * Returns all but the first element of this list.
    */
   public function tail();
-  
+
   /**
    * Runs the given function with the supplied object, then returns the object.
    */
