@@ -4,7 +4,7 @@ namespace NoxImperium\Container;
 
 use NoxImperium\Container\Interfaces\BaseMap;
 
-class ImmutableMap implements BaseMap
+class MutableMap implements BaseMap
 {
   private $val;
   private $mapFunction;
@@ -92,30 +92,30 @@ class ImmutableMap implements BaseMap
 
   public function mergeLeft($other)
   {
-    $result = $this->mapFunction->mergeLeft($this->val, $other);
+    $this->val = $this->mapFunction->mergeLeft($this->val, $other);
 
-    return new ImmutableMap($result);
+    return $this;
   }
 
   public function mergeDeepLeft($other)
   {
-    $result = $this->mapFunction->mergeDeepLeft($this->val, $other);
+    $this->val = $this->mapFunction->mergeDeepLeft($this->val, $other);
 
-    return new ImmutableMap($result);
+    return $this;
   }
 
   public function mergeRight($other)
   {
-    $result = $this->mapFunction->mergeRight($this->val, $other);
+    $this->val = $this->mapFunction->mergeRight($this->val, $other);
 
-    return new ImmutableMap($result);
+    return $this;
   }
 
   public function mergeDeepRight($other)
   {
-    $result = $this->mapFunction->mergeDeepRight($this->val, $other);
+    $this->val = $this->mapFunction->mergeDeepRight($this->val, $other);
 
-    return new ImmutableMap($result);
+    return $this;
   }
 
   // TO BE IMPLEMENTED LATER
@@ -130,16 +130,16 @@ class ImmutableMap implements BaseMap
 
   public function modify($key, $transform)
   {
-    $result = $this->mapFunction->modify($key, $transform, $this->val);
+    $this->val = $this->mapFunction->modify($key, $transform, $this->val);
 
-    return new ImmutableMap($result);
+    return $this;
   }
 
   public function modifyPath($path, $transform)
   {
-    $result = $this->mapFunction->modifyPath($path, $transform, $this->val);
+    $this->val = $this->mapFunction->modifyPath($path, $transform, $this->val);
 
-    return new ImmutableMap($result);
+    return $this;
   }
 
   public function none($predicate)
@@ -149,9 +149,9 @@ class ImmutableMap implements BaseMap
 
   public function omit($paths)
   {
-    $result = $this->mapFunction->omit($paths, $this->val);
+    $this->val = $this->mapFunction->omit($paths, $this->val);
 
-    return new ImmutableMap($result);
+    return $this;
   }
 
   public function onEach($action)
@@ -170,30 +170,30 @@ class ImmutableMap implements BaseMap
 
   public function put($key, $value)
   {
-    $result = $this->mapFunction->put($key, $value, $this->val);
+    $this->val = $this->mapFunction->put($key, $value, $this->val);
 
-    return new ImmutableMap($result);
+    return $this;
   }
 
   public function putOnPath($path, $value)
   {
-    $result = $this->mapFunction->putOnPath($path, $value, $this->val);
+    $this->val = $this->mapFunction->putOnPath($path, $value, $this->val);
 
-    return new ImmutableMap($result);
+    return $this;
   }
 
   public function remove($key)
   {
-    $result = $this->mapFunction->remove($key, $this->val);
+    $this->val = $this->mapFunction->remove($key, $this->val);
 
-    return new ImmutableMap($result);
+    return $this;
   }
 
   public function removeOnPath($path)
   {
-    $result = $this->mapFunction->removeOnPath($path, $this->val);
+    $this->val = $this->mapFunction->removeOnPath($path, $this->val);
 
-    return new ImmutableMap($result);
+    return $this;
   }
 
   public function tap($action)

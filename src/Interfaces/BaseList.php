@@ -419,6 +419,16 @@ interface BaseList extends BaseCollection
    * Returns all but the first element of this list.
    */
   public function tail();
+  
+  /**
+   * Runs the given function with the supplied object, then returns the object.
+   */
+  public function tap($action);
+
+  /**
+   * Returns current value of this `Box`.
+   */
+  public function val();
 
   /**
    * Returns a pair of lists, where first list is built from the first values of each pair from this collection, 

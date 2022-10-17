@@ -27,12 +27,12 @@ interface BaseMap extends BaseCollection
   /**
    * Returns the element at the given index and cast it to ImmutableMap
    */
-  public function getAsMap($key);
+  //public function getAsMap($key);
 
   /**
    * Returns the element at the given path and cast it to ImmutableMap
    */
-  public function getOnPathAsMap($path);
+  //public function getOnPathAsMap($path);
 
   /**
    * Returns a list of all keys in this map.
@@ -119,6 +119,16 @@ interface BaseMap extends BaseCollection
    * Removes the specified path and its corresponding value from this map.
    */
   public function removeOnPath($key);
+
+  /**
+   * Runs the given function with the supplied object, then returns the object.
+   */
+  public function tap($action);
+
+  /**
+   * Returns current value of this `Box`.
+   */
+  public function val();
 
   /**
    * Returns a list of all values in this map.

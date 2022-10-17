@@ -44,15 +44,17 @@ class MutableList implements BaseList
   public function append($value)
   {
     $result = $this->listFunction->append($value, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function appendAll($list)
   {
     $result = $this->listFunction->appendAll($list, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function contains($value)
@@ -68,8 +70,9 @@ class MutableList implements BaseList
   public function collectBy($keySelector)
   {
     $result = $this->listFunction->collectBy($keySelector, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function count($predicate)
@@ -80,57 +83,65 @@ class MutableList implements BaseList
   public function distinct()
   {
     $result = $this->listFunction->distinct($this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function distinctBy($keySelector)
   {
     $result = $this->listFunction->distinctBy($keySelector, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function drop($n)
   {
     $result = $this->listFunction->drop($n, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function dropWhile($predicate)
   {
     $result = $this->listFunction->dropWhile($predicate, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function dropLast($n)
   {
     $result = $this->listFunction->dropLast($n, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function dropLastWhile($predicate)
   {
     $result = $this->listFunction->dropLastWhile($predicate, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function dropRepeats()
   {
     $result = $this->listFunction->dropRepeats($this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function dropRepeatsBy($predicate)
   {
     $result = $this->listFunction->dropRepeatsBy($predicate, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function endsWith($sublist)
@@ -141,29 +152,33 @@ class MutableList implements BaseList
   public function filter($predicate)
   {
     $result = $this->listFunction->filter($predicate, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function filterIndexed($predicate)
   {
     $result = $this->listFunction->filterIndexed($predicate, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function filterNot($predicate)
   {
     $result = $this->listFunction->filterNot($predicate, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function filterNotIndexed($predicate)
   {
     $result = $this->listFunction->filterNotIndexed($predicate, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function find($predicate)
@@ -189,8 +204,9 @@ class MutableList implements BaseList
   public function flatten()
   {
     $result = $this->listFunction->flatten($this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function forEach($action)
@@ -261,15 +277,17 @@ class MutableList implements BaseList
   public function groupBy($groupKeySelector, $valueTransform = null)
   {
     $result = $this->listFunction->groupBy($groupKeySelector, $valueTransform, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function groupByKeyed($groupKeySelector, $keyTransform, $valueTransform = null)
   {
     $result = $this->listFunction->groupByKeyed($groupKeySelector, $keyTransform, $valueTransform, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function head()
@@ -305,29 +323,33 @@ class MutableList implements BaseList
   public function map($transform)
   {
     $result = $this->listFunction->map($transform, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function mapNotNull($transform)
   {
     $result = $this->listFunction->mapNotNull($transform, $this->val);
-
     $this->val = $result;
+    
+    return $this;
   }
 
   public function mapIndexed($transform)
   {
     $result = $this->listFunction->mapIndexed($transform, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function mapIndexedNotNull($transform)
   {
     $result = $this->listFunction->mapIndexedNotNull($transform, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function max()
@@ -362,120 +384,137 @@ class MutableList implements BaseList
   public function pluck($path, $default = null)
   {
     $result = $this->listFunction->pluck($path, $default, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function partition($predicate)
   {
     $result = $this->listFunction->partition($predicate, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function prepend($value)
   {
     $result = $this->listFunction->prepend($value, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function prependAll($list)
   {
     $result = $this->listFunction->prependAll($list, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function reduce($operation)
   {
     $result = $this->listFunction->reduce($operation, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function reduceIndexed($operation)
   {
     $result = $this->listFunction->reduceIndexed($operation, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function reduceRight($operation)
   {
     $result = $this->listFunction->reduceRight($operation, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function reduceRightIndexed($operation)
   {
     $result = $this->listFunction->reduceRightIndexed($operation, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function reverse()
   {
     $result = $this->listFunction->reverse($this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function runningFold($initial, $operation)
   {
     $result = $this->listFunction->runningFold($initial, $operation, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function runningFoldIndexed($initial, $operation)
   {
     $result = $this->listFunction->runningFoldIndexed($initial, $operation, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function runningFoldRight($initial, $operation)
   {
     $result = $this->listFunction->runningFoldRight($initial, $operation, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function runningFoldRightIndexed($initial, $operation)
   {
     $result = $this->listFunction->runningFoldRightIndexed($initial, $operation, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function runningReduce($operation)
   {
     $result = $this->listFunction->runningReduce($operation, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function runningReduceIndexed($operation)
   {
     $result = $this->listFunction->runningReduceIndexed($operation, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function runningReduceRight($operation)
   {
     $result = $this->listFunction->runningReduceRight($operation, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function runningReduceRightIndexed($operation)
   {
     $result = $this->listFunction->runningReduceRightIndexed($operation, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function sum()
@@ -486,29 +525,33 @@ class MutableList implements BaseList
   public function slice($from, $to)
   {
     $result = $this->listFunction->slice($from, $to, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function sortBy($comparator)
   {
     $result = $this->listFunction->sortBy($comparator, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function splitAt($index)
   {
     $result = $this->listFunction->splitAt($index, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function splitEvery($length)
   {
     $result = $this->listFunction->splitEvery($length, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function startsWith($sublist)
@@ -519,43 +562,56 @@ class MutableList implements BaseList
   public function take($n)
   {
     $result = $this->listFunction->take($n, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function takeWhile($predicate)
   {
     $result = $this->listFunction->takeWhile($predicate, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function takeLast($n)
   {
     $result = $this->listFunction->takeLast($n, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function takeLastWhile($predicate)
   {
     $result = $this->listFunction->takeLastWhile($predicate, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function tail()
   {
     $result = $this->listFunction->tail($this->val);
-
     $this->val = $result;
+
+    return $this;
+  }
+
+  public function tap($action)
+  {
+    $action($this->val);
+
+    return $this;
   }
 
   public function unzip()
   {
     $result = $this->listFunction->unzip($this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function val()
@@ -566,14 +622,16 @@ class MutableList implements BaseList
   public function zip($other)
   {
     $result = $this->listFunction->zip($other, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 
   public function zipWith($other, $transform)
   {
     $result = $this->listFunction->zipWith($other, $transform, $this->val);
-
     $this->val = $result;
+
+    return $this;
   }
 }
