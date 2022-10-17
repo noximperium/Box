@@ -121,6 +121,16 @@ interface BaseMap extends BaseCollection
   public function removeOnPath($key);
 
   /**
+   * Runs the given function with the supplied object, then returns the object.
+   */
+  public function tap($action);
+
+  /**
+   * Returns current value of this `Box`.
+   */
+  public function val();
+
+  /**
    * Returns a list of all values in this map.
    */
   public function values();

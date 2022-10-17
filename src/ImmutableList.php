@@ -558,6 +558,13 @@ class ImmutableList implements BaseList
     return new ImmutableList($result);
   }
 
+  public function tap($action)
+  {
+    $action($this->val);
+
+    return $this;
+  }
+
   public function val()
   {
     return $this->val;

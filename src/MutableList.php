@@ -599,6 +599,13 @@ class MutableList implements BaseList
     return $this;
   }
 
+  public function tap($action)
+  {
+    $action($this->val);
+
+    return $this;
+  }
+
   public function unzip()
   {
     $result = $this->listFunction->unzip($this->val);

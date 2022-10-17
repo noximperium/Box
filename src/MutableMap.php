@@ -196,6 +196,13 @@ class MutableMap implements BaseMap
     return $this;
   }
 
+  public function tap($action)
+  {
+    $action($this->val);
+
+    return $this;
+  }
+
   public function val()
   {
     return $this->val;
