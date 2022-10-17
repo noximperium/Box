@@ -2,34 +2,11 @@
 
 namespace NoxImperium\Container;
 
-use Exception;
-use NoxImperium\Container\Interfaces\BaseList;
-
-class MutableList implements BaseList
+class MutableList extends BaseListImpl
 {
-  private array $val;
-
-  private function __construct($val)
+  public function __construct($val)
   {
-    $this->val = $val;
-  }
-
-  /**
-   * Returns an instance of ImmutableArray with passed initial value.
-   */
-  public static function from($val = [])
-  {
-    if (gettype($val) !== 'array') throw new Exception('Initial value must be an array');
-
-    return new ImmutableList($val);
-  }
-
-  /**
-   * Returns an instance of ImmutableArray with passed value.
-   */
-  public static function of(...$args)
-  {
-    return new ImmutableList(...$args);
+    parent::__construct($val);
   }
 
   /**
@@ -46,48 +23,39 @@ class MutableList implements BaseList
     return new ImmutableList($result);
   }
 
-  public function all($predicate)
-  {
-  }
-
-  public function any($predicate)
-  {
-  }
-
   public function append($value)
   {
+    parent::append($value);
+
+    return $this;
   }
 
   public function appendAll($list)
   {
+    parent::appendAll($list);
+
+    return $this;
   }
 
-  public function average($default = null)
+  public function collectBy($keySelector)
   {
-  }
+    parent::collectBy($keySelector);
 
-  public function contains($value)
-  {
-  }
-
-  public function containsAll($values)
-  {
-  }
-
-  public function collectBy($selector)
-  {
-  }
-
-  public function count($predicate)
-  {
+    return $this;
   }
 
   public function distinct()
   {
+    parent::distinct();
+
+    return $this;
   }
 
-  public function distinctBy($predicate)
+  public function distinctBy($keySelector)
   {
+    parent::distinctBy($keySelector);
+
+    return $this;
   }
 
   public function drop($n)
@@ -98,7 +66,7 @@ class MutableList implements BaseList
   {
   }
 
-  public function dropLast($size)
+  public function dropLast($n)
   {
   }
 
@@ -111,10 +79,6 @@ class MutableList implements BaseList
   }
 
   public function dropRepeatsBy($predicate)
-  {
-  }
-
-  public function endsWith($sublist)
   {
   }
 
@@ -180,6 +144,9 @@ class MutableList implements BaseList
 
   public function getOnPath($path)
   {
+    parent::getOnPath($path);
+
+    return $this;
   }
 
   public function getOnPathOrNull($path)
@@ -202,12 +169,18 @@ class MutableList implements BaseList
   {
   }
 
-  public function groupBy($groupKeySelector, $valueTransform)
+  public function groupBy($groupKeySelector, $valueTransform = null)
   {
+    parent::groupBy($groupKeySelector, $valueTransform);
+
+    return $this;
   }
 
-  public function groupByKeyed($groupKeySelector, $keyTransform, $valueTransform)
+  public function groupByKeyed($groupKeySelector, $keyTransform, $valueTransform = null)
   {
+    parent::groupByKeyed($groupKeySelector, $keyTransform, $valueTransform = null);
+
+    return $this;
   }
 
   public function head()
@@ -270,8 +243,11 @@ class MutableList implements BaseList
   {
   }
 
-  public function pluck($path)
+  public function pluck($path, $default = null)
   {
+    parent::pluck($path, $default);
+
+    return $this;
   }
 
   public function partition($predicate)
@@ -339,10 +315,6 @@ class MutableList implements BaseList
   }
 
   public function sum()
-  {
-  }
-
-  public function startsWith($sublist)
   {
   }
 

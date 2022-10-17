@@ -888,11 +888,11 @@ class ImmutableArray
     $result = [];
 
     foreach ($this->val as $value) {
-      $resultValue = $transform($value);
-      if ($resultValue !== null) $result[] = $resultValue;
+      $resultvalue = $transform($value);
+      if ($resultvalue !== null) $result[] = $resultvalue;
     }
 
-    return new ImmutableArray($result);
+    return new immutablearray($result);
   }
 
   /**
