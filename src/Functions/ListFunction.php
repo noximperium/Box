@@ -8,8 +8,8 @@ class ListFunction
 {
   public function all($predicate, $list)
   {
-    foreach ($list as $item) {
-      if (!$predicate($item)) return false;
+    foreach ($list as $value) {
+      if (!$predicate($value)) return false;
     }
 
     return true;
@@ -17,11 +17,17 @@ class ListFunction
 
   public function any($predicate, $list)
   {
-    foreach ($list as $item) {
-      if ($predicate($item)) return true;
+    foreach ($list as $value) {
+      if ($predicate($value)) return true;
     }
 
     return false;
+  }
+
+  public function adjust($index, $transform, $list)
+  {
+    $list[$index] = $transform($list[$index]);
+    return $list;
   }
 
   public function append($value, $list)
@@ -71,7 +77,7 @@ class ListFunction
       else $result[$key] = [$value];
     }
 
-    $list = array_values($result);
+    return array_values($result);
   }
 
   public function count($predicate, $list)
@@ -91,7 +97,7 @@ class ListFunction
       if (!in_array($value, $result)) $result[] = $value;
     }
 
-    $list = $result;
+    return $result;
   }
 
   public function distinctBy($keySelector, $list)
@@ -108,48 +114,55 @@ class ListFunction
       }
     }
 
-    $list = $result;
+    return $result;
   }
 
   public function drop($n, $list)
   {
     $result = array_slice($list, $n);
 
-    $list = $result;
+    return $result;
   }
 
   public function dropWhile($predicate, $list)
   {
-    $result = [];
+    $startIndex = 0;
+    $length = count($list);
 
-    foreach ($list as $value) {
-      if (!$predicate($value)) $result[] = $value;
+    for ($i = 0; $i < $length; $i++) {
+      if (!$predicate($list[$i])) {
+        $startIndex = $i;
+        break;
+      }
     }
 
-    $list = $result;
+    $result = array_slice($list, $startIndex);
+
+    return $result;
   }
 
   public function dropLast($n, $list)
   {
-    $result = array_slice($list, 0, count($list()) - $n);
+    $result = array_slice($list, 0, count($list) - $n);
 
-    $list = $result;
+    return $result;
   }
 
   public function dropLastWhile($predicate, $list)
   {
-    $endIndex = -1;
     $length = count($list);
+    $endIndex = $length;
 
     for ($i = $length - 1; $i >= 0; $i--) {
-      $element = $list[$i];
-      if ($predicate($element)) $endIndex = $i;
-      else break;
+      if (!$predicate($list[$i])) {
+        $endIndex = $i;
+        break;
+      }
     }
 
     $result = array_slice($list, 0, $endIndex);
 
-    $list = $result;
+    return $result;
   }
 
   public function dropRepeats($list)
@@ -163,7 +176,7 @@ class ListFunction
       if ($currentValue !== $previousValue) $result[] = $list[$i];
     }
 
-    $list = $result;
+    return $result;
   }
 
   public function dropRepeatsBy($predicate, $list)
@@ -178,7 +191,7 @@ class ListFunction
       if ($valid) $result[] = $list[$i];
     }
 
-    $list = $result;
+    return $result;
   }
 
   public function endsWith($sublist, $list)
@@ -200,7 +213,7 @@ class ListFunction
       if ($eligible) $result[] = $value;
     }
 
-    $list = $result;
+    return $result;
   }
 
   public function filterIndexed($predicate, $list)
@@ -212,7 +225,7 @@ class ListFunction
       if ($eligible) $result[] = $value;
     }
 
-    $list = $result;
+    return $result;
   }
 
   public function filterNot($predicate, $list)
@@ -224,7 +237,7 @@ class ListFunction
       if ($eligible) $result[] = $value;
     }
 
-    $list = $result;
+    return $result;
   }
 
   public function filterNotIndexed($predicate, $list)
@@ -236,7 +249,18 @@ class ListFunction
       if ($eligible) $result[] = $value;
     }
 
-    $list = $result;
+    return $result;
+  }
+
+  public function filterNotNull($list)
+  {
+    $result = [];
+
+    foreach ($list as $value) {
+      if ($value !== null) $result[] = $value;
+    }
+
+    return $result;
   }
 
   public function find($predicate, $list)
@@ -261,7 +285,7 @@ class ListFunction
   public function first($list)
   {
     $length = count($list);
-    if ($length === 0) throw new Exception('The array is empty.');
+    if ($length === 0) throw new Exception('The List is empty.');
 
     return $list[0];
   }
@@ -274,13 +298,33 @@ class ListFunction
     return $list[0];
   }
 
+  public function flatMap($transform, $list)
+  {
+    $result = [];
+    foreach ($list as $value) {
+      $result = array_merge($result, $transform($value));
+    }
+
+    return $result;
+  }
+
+  public function flatMapIndexed($transform, $list)
+  {
+    $result = [];
+    foreach ($list as $key => $value) {
+      $result = array_merge($result, $transform($key, $value));
+    }
+
+    return $result;
+  }
+
   private function recurseFlatten($value)
   {
     $result = [];
 
-    foreach ($value as $item) {
-      if (gettype($item) !== 'array') $result[] = $item;
-      else $result = array_merge($result, $this->recurseFlatten($item));
+    foreach ($value as $value) {
+      if (gettype($value) !== 'array') $result[] = $value;
+      else $result = array_merge($result, $this->recurseFlatten($value));
     }
 
     return $result;
@@ -290,21 +334,7 @@ class ListFunction
   {
     $result = $this->recurseFlatten($list);
 
-    $list = $result;
-  }
-
-  public function forEach($action, $list)
-  {
-    foreach ($list as $value) {
-      $action($value);
-    }
-  }
-
-  public function forEachIndexed($action, $list)
-  {
-    foreach ($list as $key => $value) {
-      $action($key, $value);
-    }
+    return $result;
   }
 
   public function fold($initial, $operation, $list)
@@ -328,6 +358,7 @@ class ListFunction
 
     return $accumulator;
   }
+
 
   public function foldRight($initial, $operation, $list)
   {
@@ -353,14 +384,23 @@ class ListFunction
     return $accumulator;
   }
 
+  public function forEach($action, $list)
+  {
+    foreach ($list as $value) {
+      $action($value);
+    }
+  }
+
+  public function forEachIndexed($action, $list)
+  {
+    foreach ($list as $key => $value) {
+      $action($key, $value);
+    }
+  }
+
   public function get($index, $list)
   {
     return $list[$index];
-  }
-
-  public function getOrNull($index, $list)
-  {
-    return $list[$index] ?? null;
   }
 
   public function getOrElse($index, $default, $list)
@@ -368,20 +408,9 @@ class ListFunction
     return $list[$index] ?? $default;
   }
 
-  private function pathGetter($path, $onNotFound, $list)
+  public function getOrNull($index, $list)
   {
-    if (gettype($path) === 'string') $path = explode('.', $path);
-
-    $value = $list;
-
-    foreach ($path as $key) {
-      $exists = array_key_exists($key, $value);
-
-      if (!$exists) return $onNotFound();
-      $value = $value[$key];
-    }
-
-    return $value;
+    return $list[$index] ?? null;
   }
 
   public function getOnPath($path, $list)
@@ -393,19 +422,19 @@ class ListFunction
     return $this->pathGetter($path, $onNotFound, $list);
   }
 
-  public function getOnPathOrNull($path, $list)
+  public function getOnPathOrElse($path, $default, $list)
   {
-    $onNotFound = function () {
-      return null;
+    $onNotFound = function () use ($default) {
+      return $default;
     };
 
     return $this->pathGetter($path, $onNotFound, $list);
   }
 
-  public function getOnPathOrElse($path, $default, $list)
+  public function getOnPathOrNull($path, $list)
   {
-    $onNotFound = function () use ($default) {
-      return $default;
+    $onNotFound = function () {
+      return null;
     };
 
     return $this->pathGetter($path, $onNotFound, $list);
@@ -434,7 +463,7 @@ class ListFunction
       else $result[$groupKey] = [$value];
     }
 
-    $list = $result;
+    return $result;
   }
 
   public function groupByKeyed($groupKeySelector, $keyTransform, $valueTransform, $list)
@@ -451,7 +480,7 @@ class ListFunction
       else $result[$groupKey] = [$key => $value];
     }
 
-    $list = $result;
+    return $result;
   }
 
   public function head($list)
@@ -512,7 +541,7 @@ class ListFunction
       $result[] = $transform($value, $key);
     }
 
-    $list = $result;
+    return $result;
   }
 
   public function mapIndexed($transform, $list)
@@ -523,19 +552,7 @@ class ListFunction
       $result[] = $transform($index, $value);
     }
 
-    $list = $result;
-  }
-
-  public function mapIndexedNotNull($transform, $list)
-  {
-    $result = [];
-
-    foreach ($list as $index => $value) {
-      $resultValue  = $transform($index, $value);
-      if ($resultValue !== null) $result[] = $resultValue;
-    }
-
-    $list = $result;
+    return $result;
   }
 
   public function mapNotNull($transform, $list)
@@ -547,7 +564,19 @@ class ListFunction
       if ($resultvalue !== null) $result[] = $resultvalue;
     }
 
-    $list = $result;
+    return $result;
+  }
+
+  public function mapIndexedNotNull($transform, $list)
+  {
+    $result = [];
+
+    foreach ($list as $index => $value) {
+      $resultValue  = $transform($index, $value);
+      if ($resultValue !== null) $result[] = $resultValue;
+    }
+
+    return $result;
   }
 
   public function max($list)
@@ -562,8 +591,8 @@ class ListFunction
 
   public function none($predicate, $list)
   {
-    foreach ($list as $item) {
-      if ($predicate($item)) return false;
+    foreach ($list as $value) {
+      if ($predicate($value)) return false;
     }
 
     return true;
@@ -584,7 +613,7 @@ class ListFunction
       return $ref;
     }, $list);
 
-    $list = $result;
+    return $result;
   }
 
   public function partition($predicate, $list)
@@ -617,7 +646,7 @@ class ListFunction
   public function reduce($operation, $list)
   {
     $length = count($list);
-    if ($length === 0) throw new Exception('Array is empty.');
+    if ($length === 0) throw new Exception('List is empty.');
 
     $accumulator = $list[0];
 
@@ -645,7 +674,7 @@ class ListFunction
   public function reduceIndexed($operation, $list)
   {
     $length = count($list);
-    if ($length === 0) throw new Exception('Array is empty.');
+    if ($length === 0) throw new Exception('List is empty.');
 
     $accumulator = $list[0];
 
@@ -673,10 +702,25 @@ class ListFunction
   public function reduceRight($operation, $list)
   {
     $length = count($list);
-    if ($length === 0) throw new Exception('Array is empty.');
+    if ($length === 0) throw new Exception('List is empty.');
 
-    $accumulator = $list[0];
-    $lastIndex = $length - 1;
+    $accumulator = $list[$length - 1];
+    $lastIndex = $length - 2;
+
+    for ($i = $lastIndex; $i >= 0; $i--) {
+      $accumulator = $operation($accumulator, $list[$i]);
+    }
+
+    return $accumulator;
+  }
+
+  public function reduceRightOrNull($operation, $list)
+  {
+    $length = count($list);
+    if ($length === 0) return null;
+
+    $accumulator = $list[$length - 1];
+    $lastIndex = $length - 2;
 
     for ($i = $lastIndex; $i >= 0; $i--) {
       $accumulator = $operation($accumulator, $list[$i]);
@@ -688,7 +732,7 @@ class ListFunction
   public function reduceRightIndexed($operation, $list)
   {
     $length = count($list);
-    if ($length === 0) throw new Exception('Array is empty.');
+    if ($length === 0) throw new Exception('List is empty.');
 
     $accumulator = $list[0];
     $lastIndex = $length - 1;
@@ -699,6 +743,22 @@ class ListFunction
 
     return $accumulator;
   }
+
+  public function reduceRightIndexedOrNull($operation, $list)
+  {
+    $length = count($list);
+    if ($length === 0) return null;
+
+    $accumulator = $list[0];
+    $lastIndex = $length - 1;
+
+    for ($i = $lastIndex; $i >= 0; $i--) {
+      $accumulator = $operation($i, $accumulator, $list[$i]);
+    }
+
+    return $accumulator;
+  }
+
 
   public function reverse($list)
   {
@@ -732,7 +792,7 @@ class ListFunction
     $result = [$accumulator];
 
     foreach ($list as $index => $value) {
-      $accumulator = $operation($index, $accumulator, $value);
+      $accumulator = $operation($accumulator, $index, $value);
       $result[] = $accumulator;
     }
 
@@ -796,7 +856,7 @@ class ListFunction
     $result = [$accumulator];
 
     for ($i = 1; $i < $length; $i++) {
-      $accumulator = $operation($i, $accumulator, $list[$i]);
+      $accumulator = $operation($accumulator, $i, $list[$i]);
       $result[] = $accumulator;
     }
 
@@ -805,11 +865,12 @@ class ListFunction
 
   public function runningReduceRight($operation, $list)
   {
-    $lastIndex = count($list) - 1;
-    $accumulator = $list[0];
+    $length = count($list);
+    $lastIndex = $length - 2;
+    $accumulator = $list[$length - 1];
     $result = [$accumulator];
 
-    for ($i = $lastIndex; $i > 0; $i--) {
+    for ($i = $lastIndex; $i >= 0; $i--) {
       $accumulator = $operation($accumulator, $list[$i]);
       $result[] = $accumulator;
     }
@@ -819,11 +880,12 @@ class ListFunction
 
   public function runningReduceRightIndexed($operation, $list)
   {
-    $lastIndex = count($list) - 1;
-    $accumulator = $list[0];
+    $length = count($list);
+    $lastIndex = $length - 2;
+    $accumulator = $list[$length - 1];
     $result = [$accumulator];
 
-    for ($i = $lastIndex; $i > 0; $i--) {
+    for ($i = $lastIndex; $i >= 0; $i--) {
       $accumulator = $operation($accumulator, $i, $list[$i]);
       $result[] = $accumulator;
     }
@@ -878,12 +940,12 @@ class ListFunction
     return [$a, $b];
   }
 
-  public function splitEvery($length)
+  public function splitEvery($length, $list)
   {
     $chunked = [];
     $temp = [];
 
-    foreach ($this->val as $value) {
+    foreach ($list as $value) {
       $temp[] = $value;
       if (count($temp) === $length) {
         $chunked[] = $temp;
@@ -921,13 +983,17 @@ class ListFunction
    */
   public function takeLastWhile($predicate, $list)
   {
-    $result = [];
     $length = count($list);
+    $startIndex = 0;
 
     for ($i = $length - 1; $i >= 0; $i--) {
-      if ($predicate($list[$i])) $result[] = $list[$i];
-      else break;
+      if (!$predicate($list[$i])) {
+        $startIndex = $i + 1;
+        break;
+      }
     }
+
+    $result = array_slice($list, $startIndex);
 
     return $result;
   }
@@ -994,5 +1060,21 @@ class ListFunction
     }
 
     return $result;
+  }
+
+  private function pathGetter($path, $onNotFound, $list)
+  {
+    if (gettype($path) === 'string') $path = explode('.', $path);
+
+    $value = $list;
+
+    foreach ($path as $key) {
+      $exists = array_key_exists($key, $value);
+
+      if (!$exists) return $onNotFound();
+      $value = $value[$key];
+    }
+
+    return $value;
   }
 }
