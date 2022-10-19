@@ -252,9 +252,71 @@ test('asserts mergeDeepRight behaves correctly', function () {
 });
 
 test('asserts mergeWith behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]
+  ];
+
+  $other = [
+    'age' => '85',
+  ];
+
+  $expected = [
+    'name' => 'Atlas',
+    'age' => '81 85',
+    'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]
+  ];
+
+  $sut = $fun->mergeWith(function ($a, $b) {
+    return "$a $b";
+  }, $list, $other);
+  expect($sut)->toBe($expected);
 });
 
 test('asserts mergeDeepWith behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]
+  ];
+
+  $other = [
+    'age' => '85',
+    'contact' => [
+      'askfm' => '@atlas'
+    ],
+  ];
+
+  $expected = [
+    'name' => 'Atlas',
+    'age' => '81 85',
+    'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas',
+      'askfm' => '@atlas'
+    ]
+  ];
+
+  $sut = $fun->mergeDeepWith(function ($a, $b) {
+    return "$a $b";
+  }, $list, $other);
+  expect($sut)->toBe($expected);
 });
 
 test('asserts modify behaves correctly', function () {
