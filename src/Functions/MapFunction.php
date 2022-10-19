@@ -46,7 +46,7 @@ class MapFunction
   {
     if (gettype($path) === 'string') $path = explode('.', $path);
 
-    $ref = $this->val;
+    $ref = $map;
 
     foreach ($path as $key) {
       if (!isset($ref[$key])) return false;
@@ -178,21 +178,40 @@ class MapFunction
     }
   }
 
-
   public function mergeDeepRight($map, $other)
   {
     $this->_mergeDeepRight($map, $other);
     return $map;
   }
 
-  // TO BE IMPLEMENTED LATER
   public function mergeWith($transform, $map, $other)
   {
+    $result = $map;
+    foreach ($other as $key => $value) {
+      if (isset($result[$key])) $result[$key] = $transform($result[$key], $value);
+      else $result[$key] = $value;
+    }
+
+    return $result;
   }
 
-  // TO BE IMPLEMENTED LATER
-  public function mergeDeepWith($transform, $other, $map)
+  private function _mergeDeepWith($transform, &$map, $other)
   {
+    $result = &$map;
+    foreach ($other as $key => $value) {
+      $leftExists = isset($result[$key]);
+      $bothArray = $leftExists ? gettype($result[$key]) === 'array' && gettype($value) === 'array' : false;
+
+      if ($leftExists && $bothArray) $this->_mergeDeepWith($transform, $map[$key], $value);
+      else if ($leftExists) $result[$key] = $transform($result[$key], $value);
+      else $result[$key] = $value;
+    }
+  }
+
+  public function mergeDeepWith($transform, $map, $other)
+  {
+    $this->_mergeDeepWith($transform, $map, $other);
+    return $map;
   }
 
   public function modify($key, $transform, $map)
@@ -206,12 +225,12 @@ class MapFunction
     return $newMap;
   }
 
-  public function modifyPath($path, $transform, $map)
+  public function modifyOnPath($path, $transform, $map)
   {
     if (gettype($path) === 'string') $path = explode('.', $path);
 
     $lastIndex = count($path) - 1;
-    $newMap = $this->val;
+    $newMap = $map;
     $ref = &$newMap;
 
     foreach ($path as $index => $key) {
@@ -247,8 +266,8 @@ class MapFunction
   public function put($key, $value, $map)
   {
     $isExists = isset($map[$key]);
-    if (!$isExists) $this->val += [$key => $value];
-    else $this->val[$key] = $value;
+    if (!$isExists) $map += [$key => $value];
+    else $map[$key] = $value;
 
     return $map;
   }
@@ -305,6 +324,8 @@ class MapFunction
       if ($isLastIndex) unset($ref[$key]);
       else $ref = &$ref[$key];
     }
+
+    return $map;
   }
 
   public function values($map)
