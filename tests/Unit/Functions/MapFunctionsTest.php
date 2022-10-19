@@ -49,349 +49,421 @@ test('asserts containsKey behaves correctly', function () {
 
   $expected = true;
 
-  $sut = $fun->containsKey(function ($key) {
-    return $key === 'inventory-1';
+  $sut = $fun->containsKey('inventory-1', $list);
+
+  expect($sut)->toBe($expected);
+});
+
+test('asserts containsValue behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'inventory-1' => 'Rock',
+    'inventory-2' => 'Mythril',
+    'inventory-3' => 'Orichalcum',
+    'inventory-4' => null,
+  ];
+
+  $expected = true;
+
+  $sut = $fun->containsValue('Mythril', $list);
+
+  expect($sut)->toBe($expected);
+});
+
+test('asserts containsPath behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]
+  ];
+
+  $expected = true;
+
+  $sut = $fun->containsPath('contact.line', $list);
+  expect($sut)->toBe($expected);
+});
+
+test('asserts keys behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]
+  ];
+
+  $expected = ['name', 'age', 'contact'];
+
+  $sut = $fun->keys($list);
+  expect($sut)->toBe($expected);
+});
+
+test('asserts mergeLeft behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]
+  ];
+
+  $other = [
+    'age' => '85',
+    'addr' => '-',
+    'contact' => [
+      'wa' => '04990198',
+      'askfm' => '@atlas'
+    ],
+  ];
+
+  $expected = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas',
+    ],
+    'addr' => '-',
+  ];
+
+  $sut = $fun->mergeLeft($list, $other);
+  expect($sut)->toBe($expected);
+});
+
+test('asserts mergeDeepLeft behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]
+  ];
+
+  $other = [
+    'age' => '85',
+    'addr' => '-',
+    'contact' => [
+      'wa' => '04990198',
+      'askfm' => '@atlas'
+    ],
+  ];
+
+  $expected = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas',
+      'askfm' => '@atlas'
+    ],
+    'addr' => '-',
+  ];
+
+  $sut = $fun->mergeDeepLeft($list, $other);
+  expect($sut)->toBe($expected);
+});
+
+test('asserts mergeRight behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]
+  ];
+
+  $other = [
+    'age' => '85',
+    'addr' => '-',
+    'contact' => [
+      'wa' => '04990198',
+      'askfm' => '@atlas'
+    ],
+  ];
+
+  $expected = [
+    'name' => 'Atlas',
+    'age' => '85',
+    'contact' => [
+      'wa' => '04990198',
+      'askfm' => '@atlas'
+    ],
+    'addr' => '-',
+  ];
+
+  $sut = $fun->mergeRight($list, $other);
+  expect($sut)->toBe($expected);
+});
+
+test('asserts mergeDeepRight behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]
+  ];
+
+  $other = [
+    'age' => '85',
+    'addr' => '-',
+    'contact' => [
+      'wa' => '04990198',
+      'askfm' => '@atlas'
+    ],
+  ];
+
+  $expected = [
+    'name' => 'Atlas',
+    'age' => '85',
+    'contact' => [
+      'provider' => 'github',
+      'wa' => '04990198',
+      'line' => '@atlas',
+      'askfm' => '@atlas'
+    ],
+    'addr' => '-',
+  ];
+
+  $sut = $fun->mergeDeepRight($list, $other);
+  expect($sut)->toBe($expected);
+});
+
+test('asserts mergeWith behaves correctly', function () {
+});
+
+test('asserts mergeDeepWith behaves correctly', function () {
+});
+
+test('asserts modify behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'gitlab',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]
+  ];
+
+  $expected = [
+    'name' => 'ATLAS',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'gitlab',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]
+  ];
+
+  $sut = $fun->modify('name', function ($value) {
+    return strtoupper($value);
   }, $list);
 
   expect($sut)->toBe($expected);
 });
 
-test('asserts assoc behaves correctly', function () {
-  $container = ImmutableAssoc::of([]);
-
-  $sutOne = $container
-    ->put('name', 'Kaka')
-    ->val();
-
-  expect($sutOne)->toBe([
-    'name' => 'Kaka'
-  ]);
-
-  $sutTwo = $container
-    ->put('name', 'Kaka')
-    ->put('name', 'Rui')
-    ->val();
-
-  expect($sutTwo)->toBe([
-    'name' => 'Rui'
-  ]);
-});
-
-test('asserts assocPath behaves correctly', function () {
-  $container = ImmutableAssoc::of([]);
-
-  $sutOne = $container
-    ->putPath(['persons', 'kaka', 'full_name'], 'Kharisma Sri Wibowo')
-    ->val();
-
-  expect($sutOne)->toBe([
-    'persons' => [
-      'kaka' => [
-        'full_name' => 'Kharisma Sri Wibowo'
-      ]
+test('asserts modifyOnPath behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'gitlab',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
     ]
-  ]);
+  ];
 
-  $sutTwo = $container
-    ->putPath(['persons', 'kaka', 'full_name'], 'Kharisma Sri Wibowo')
-    ->putPath(['persons', 'kaka', 'age'], 21)
-    ->val();
-
-  expect($sutTwo)->toBe([
-    'persons' => [
-      'kaka' => [
-        'full_name' => 'Kharisma Sri Wibowo',
-        'age' => 21
-      ]
+  $expected = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
     ]
-  ]);
+  ];
 
-  $sutThree = $container
-    ->putPath(['persons', 'kaka', 'full_name'], 'Kharisma Sri Wibowo')
-    ->putPath(['persons', 'kaka', 'full_name'], 'Kharisma Sri Wibowo')
-    ->putPath(['persons', 'kaka', 'age'], 21)
-    ->putPath(['persons', 'kaka', 'age'], ['2001' => 0, '2022' => 21])
-    ->val();
-
-  expect($sutThree)->toBe([
-    'persons' => [
-      'kaka' => [
-        'full_name' => 'Kharisma Sri Wibowo',
-        'age' => [
-          '2001' => 0,
-          '2022' => 21
-        ]
-      ]
-    ]
-  ]);
-
-  $sutFour = $container
-    ->putPath('persons.kaka.full_name', 'Kharisma Sri Wibowo')
-    ->putPath('persons.kaka.full_name', 'Kharisma Sri Wibowo')
-    ->putPath('persons.kaka.age', 21)
-    ->putPath('persons.kaka.age', ['2001' => 0, '2022' => 21])
-    ->val();
-
-  expect($sutFour)->toBe([
-    'persons' => [
-      'kaka' => [
-        'full_name' => 'Kharisma Sri Wibowo',
-        'age' => [
-          '2001' => 0,
-          '2022' => 21
-        ]
-      ]
-    ]
-  ]);
-});
-
-test('asserts dissoc behaves correctly', function () {
-  $container = ImmutableAssoc::of([
-    'name' => 'Kaka',
-    'age' => 21
-  ]);
-
-  $sut = $container
-    ->remove('name')
-    ->val();
-
-  expect($sut)->toBe([
-    'age' => 21
-  ]);
-});
-
-test('asserts dissocPath behaves correctly', function () {
-  $container = ImmutableAssoc::of([
-    'persons' => [
-      'kaka' => [
-        'full_name' => 'Kharisma Sri Wibowo',
-        'age' => [
-          '2001' => 0,
-          '2022' => 21
-        ]
-      ],
-      'rui' => [
-        'full_name' => 'Rui',
-        'age' => [
-          '2005' => 0,
-          '2018' => 17
-        ]
-      ]
-    ]
-  ]);
-
-  $sutOne = $container
-    ->removePath('persons')
-    ->val();
-
-  expect($sutOne)->toBe([]);
-
-  $sutTwo = $container
-    ->removePath('persons.kaka')
-    ->val();
-
-  expect($sutTwo)->toBe([
-    'persons' => [
-      'rui' => [
-        'full_name' => 'Rui',
-        'age' => [
-          '2005' => 0,
-          '2018' => 17
-        ]
-      ]
-    ]
-  ]);
-
-  $sutThree = $container
-    ->removePath('persons.kaka.age.2001')
-    ->val();
-
-  expect($sutThree)->toBe([
-    'persons' => [
-      'kaka' => [
-        'full_name' => 'Kharisma Sri Wibowo',
-        'age' => [
-          '2022' => 21
-        ]
-      ],
-      'rui' => [
-        'full_name' => 'Rui',
-        'age' => [
-          '2005' => 0,
-          '2018' => 17
-        ]
-      ]
-    ]
-  ]);
-});
-
-test('asserts has behaves correctly', function () {
-  $container = ImmutableAssoc::of([
-    'name' => 'Kaka',
-    'age' => 21
-  ]);
-
-  $sut = $container->has('name');
-  expect($sut)->toBe(true);
-});
-
-test('asserts hasPath behaves correctly', function () {
-  $container = ImmutableAssoc::of([
-    'name' => 'Kaka',
-    'age' => 21,
-    'account' => [
-      'email' => 'gmail',
-      'vcs' => 'github'
-    ]
-  ]);
-
-  $sutOne = $container->hasPath('account.email');
-  expect($sutOne)->toBe(true);
-
-  $sutTwo = $container->hasPath('account.communication');
-  expect($sutTwo)->toBe(false);
-});
-
-test('asserts modify behaves correctly', function () {
-  $container = ImmutableAssoc::of([
-    'name' => 'Kaka',
-    'age' => 21
-  ]);
-
-  $sutOne = $container->modify('name', function ($value) {
-    return strtoupper($value);
-  })->val();
-
-  expect($sutOne)->toBe([
-    'name' => 'KAKA',
-    'age' => 21
-  ]);
-
-  $sutTwo = $container->modify('alias', function ($value) {
-    return strtoupper($value);
-  })->val();
-
-  expect($sutTwo)->toBe([
-    'name' => 'Kaka',
-    'age' => 21
-  ]);
-});
-
-test('asserts modifyPath behaves correctly', function () {
-  $container = ImmutableAssoc::of([
-    'name' => 'Kaka',
-    'age' => 21,
-    'account' => [
-      'email' => 'gmail',
-      'vcs' => 'github'
-    ]
-  ]);
-
-  $sutOne = $container->modifyPath('account.email', function ($value) {
-    return strtoupper($value);
-  })->val();
-
-  expect($sutOne)->toBe([
-    'name' => 'Kaka',
-    'age' => 21,
-    'account' => [
-      'email' => 'GMAIL',
-      'vcs' => 'github'
-    ]
-  ]);
-
-  $sutTwo = $container->modify('account.note', function ($value) {
-    return strtoupper($value);
-  })->val();
-
-  expect($sutTwo)->toBe([
-    'name' => 'Kaka',
-    'age' => 21,
-    'account' => [
-      'email' => 'gmail',
-      'vcs' => 'github'
-    ]
-  ]);
+  $sut = $fun->modifyOnPath('contact.provider', function () {
+    return 'github';
+  }, $list);
+  expect($sut)->toBe($expected);
 });
 
 test('asserts omit behaves correctly', function () {
-  $container = ImmutableAssoc::of([
-    'name' => 'Kaka',
-    'age' => 21,
-    'account' => [
-      'email' => 'gmail',
-      'vcs' => 'github'
+  $fun = new MapFunction();
+  $list = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'gitlab',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
     ]
-  ]);
+  ];
 
-  $sut = $container->omit(['age', 'account'])->val();
+  $expected = [
+    'contact' => [
+      'provider' => 'gitlab',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]
+  ];
 
-  expect($sut)->toBe([
-    'name' => 'Kaka',
-  ]);
+  $sut = $fun->omit(['name', 'age'], $list);
+  expect($sut)->toBe($expected);
 });
 
-test('asserts path behaves correctly', function () {
-  $container = ImmutableAssoc::of([
-    'name' => 'Kaka',
-    'age' => 21
-  ]);
+test('asserts put behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'gitlab',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]
+  ];
 
-  $sutOne = $container->path('name');
-  expect($sutOne)->toBe('Kaka');
+  $expected = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'gitlab',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ],
+    'addr' => '-',
+  ];
 
-  $sutTwo = $container
-    ->put('account', [
-      'email' => 'gmail',
-      'vcs' => 'github'
-    ])
-    ->path('account');
-
-  expect($sutTwo)->toBe([
-    'email' => 'gmail',
-    'vcs' => 'github'
-  ]);
-
-  $sutThree = $container
-    ->put('account', [
-      'email' => 'gmail',
-      'vcs' => 'github'
-    ])
-    ->path('account.email');
-
-  expect($sutThree)->toBe('gmail');
+  $sut = $fun->put('addr', '-', $list);
+  expect($sut)->toBe($expected);
 });
 
-test('asserts pathEq behaves correctly', function () {
-  $container = ImmutableAssoc::of([
-    'name' => 'Kaka',
-    'age' => 21,
-    'account' => [
-      'email' => 'gmail',
-      'vcs' => 'github'
+test('asserts putOnPath behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'gitlab',
+      'wa' => '08423848327432',
+      'line' => '@atlas',
     ]
-  ]);
+  ];
 
-  $sutOne = $container->pathEq('name', 'Kaka');
-  expect($sutOne)->toBe(true);
+  $expected = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'gitlab',
+      'wa' => '08423848327432',
+      'line' => '@atlas',
+      'askfm' => '@atlasian'
+    ]
+  ];
 
-  $sutTwo = $container->pathEq('account.email', 'yahoo');
-  expect($sutTwo)->toBe(false);
+  $sut = $fun->putOnPath('contact.askfm', '@atlasian', $list);
+  expect($sut)->toBe($expected);
 });
 
-test('asserts pathOr behaves correctly', function () {
-  $container = ImmutableAssoc::of([
-    'name' => 'Kaka',
-    'age' => 21,
-    'account' => [
-      'email' => 'gmail',
-      'vcs' => 'github'
+test('asserts remove behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'gitlab',
+      'wa' => '08423848327432',
+      'line' => '@atlas',
     ]
-  ]);
+  ];
 
-  $sutOne = $container->pathOr('verified', true);
-  expect($sutOne)->toBe(true);
+  $expected = [
+    'name' => 'Atlas',
+    'contact' => [
+      'provider' => 'gitlab',
+      'wa' => '08423848327432',
+      'line' => '@atlas',
+    ]
+  ];
 
-  $sutTwo = $container->pathOr('name', 'No Name');
-  expect($sutTwo)->toBe('Kaka');
+  $sut = $fun->remove('age', $list);
+  expect($sut)->toBe($expected);
+});
+
+test('asserts removeOnPath behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'gitlab',
+      'wa' => '08423848327432',
+      'line' => '@atlas',
+    ]
+  ];
+
+  $expected = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'gitlab',
+      'wa' => '08423848327432',
+    ]
+  ];
+
+  $sut = $fun->removeOnPath('contact.line', $list);
+  expect($sut)->toBe($expected);
+});
+
+test('asserts values behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'name' => 'Atlas',
+    'age' => '81',
+    'contact' => [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]
+  ];
+
+  $expected = [
+    'Atlas',
+    '81',
+    [
+      'provider' => 'github',
+      'wa' => '08423848327432',
+      'line' => '@atlas'
+    ]
+  ];
+
+  $sut = $fun->values($list);
+  expect($sut)->toBe($expected);
 });

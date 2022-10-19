@@ -46,7 +46,7 @@ class MapFunction
   {
     if (gettype($path) === 'string') $path = explode('.', $path);
 
-    $ref = $this->val;
+    $ref = $map;
 
     foreach ($path as $key) {
       if (!isset($ref[$key])) return false;
@@ -206,12 +206,12 @@ class MapFunction
     return $newMap;
   }
 
-  public function modifyPath($path, $transform, $map)
+  public function modifyOnPath($path, $transform, $map)
   {
     if (gettype($path) === 'string') $path = explode('.', $path);
 
     $lastIndex = count($path) - 1;
-    $newMap = $this->val;
+    $newMap = $map;
     $ref = &$newMap;
 
     foreach ($path as $index => $key) {
@@ -247,8 +247,8 @@ class MapFunction
   public function put($key, $value, $map)
   {
     $isExists = isset($map[$key]);
-    if (!$isExists) $this->val += [$key => $value];
-    else $this->val[$key] = $value;
+    if (!$isExists) $map += [$key => $value];
+    else $map[$key] = $value;
 
     return $map;
   }
@@ -305,6 +305,8 @@ class MapFunction
       if ($isLastIndex) unset($ref[$key]);
       else $ref = &$ref[$key];
     }
+
+    return $map;
   }
 
   public function values($map)
