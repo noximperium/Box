@@ -1,20 +1,59 @@
 <?php
 
-use NoxImperium\Container\ImmutableAssoc;
+use NoxImperium\Box\Functions\MapFunction;
 
-test('asserts instance of ImmutableAssoc', function () {
-  $container = ImmutableAssoc::of([]);
-  $type = get_class($container);
+test('asserts all behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'inventory-1' => 'Rock',
+    'inventory-2' => 'Mythril',
+    'inventory-3' => 'Orichalcum',
+    'inventory-4' => null,
+  ];
 
-  expect($type)->toBe('NoxImperium\\Container\\ImmutableAssoc');
+  $expected = false;
+
+  $sut = $fun->all(function ($value) {
+    return $value !== null;
+  }, $list);
+
+  expect($sut)->toBe($expected);
 });
 
-test('asserts initial content of ImmutableAssoc is empty', function () {
-  $container = ImmutableAssoc::of([]);
-  $val = $container->val();
-  $length = count($val);
+test('asserts any behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'inventory-1' => 'Rock',
+    'inventory-2' => 'Mythril',
+    'inventory-3' => 'Orichalcum',
+    'inventory-4' => null,
+  ];
 
-  expect($length)->toBe(0);
+  $expected = true;
+
+  $sut = $fun->any(function ($value) {
+    return $value !== null;
+  }, $list);
+
+  expect($sut)->toBe($expected);
+});
+
+test('asserts containsKey behaves correctly', function () {
+  $fun = new MapFunction();
+  $list = [
+    'inventory-1' => 'Rock',
+    'inventory-2' => 'Mythril',
+    'inventory-3' => 'Orichalcum',
+    'inventory-4' => null,
+  ];
+
+  $expected = true;
+
+  $sut = $fun->containsKey(function ($key) {
+    return $key === 'inventory-1';
+  }, $list);
+
+  expect($sut)->toBe($expected);
 });
 
 test('asserts assoc behaves correctly', function () {
