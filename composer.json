@@ -1,8 +1,8 @@
 {
-  "name": "noximperium/collection-container",
+  "name": "noximperium/box",
   "description": "",
   "require": {
-    "php": ">=7.3"
+    "php": ">=7.0.2"
   },
   "require-dev": {
     "pestphp/pest": "^1.22",
