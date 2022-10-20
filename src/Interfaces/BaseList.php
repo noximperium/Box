@@ -437,6 +437,36 @@ interface BaseList extends BaseCollection
   public function unzip();
 
   /**
+   * Filters the list by a given key and value pair.
+   */
+  public function where($key, $value);
+
+  /**
+   * Filters the list by a given key, operator and value pair.
+   */
+  public function whereComparison($key, $operator, $value);
+
+  /**
+   * Filters the list by determining if a value of specified key is within a given range.
+   */
+  public function whereBetween($key, $from, $to);
+
+  /**
+   * Filters the list by determining if a value of specified key is not within a given range.
+   */
+  public function whereNotBetween($key, $from, $to);
+
+  /**
+   * Filters the list by determining if a value of specified key is contained within the given array of values.
+   */
+  public function whereIn($key, $values);
+
+  /**
+   * Filters the list by determining if a value of specified key is not contained within the given array of values.
+   */
+  public function whereNotIn($key, $values);
+
+  /**
    * Returns a list of values built from the elements of this list and the other list with the same index.
    * If transform function is given, it will be applied to each pair of elements. 
    * The returned list has length of the shortest collection.

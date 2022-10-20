@@ -1032,6 +1032,83 @@ class ListFunction
     return [$a, $b];
   }
 
+  public function where($key, $value, $list)
+  {
+    $result = [];
+
+    foreach ($list as $pair) {
+      if (isset($pair[$key]) && $pair[$key] === $value) $result[] = $pair;
+    }
+
+    return $result;
+  }
+
+  public function whereComparison($key, $operator, $value, $list)
+  {
+    $result = [];
+
+    foreach ($list as $pair) {
+      $isExists = isset($pair[$key]);
+      $isEligible = $isExists ? $this->compare($operator, $pair[$key], $value) : false;
+      if ($isExists && $isEligible) $result[] = $pair;
+    }
+
+    return $result;
+  }
+
+  public function whereBetween($key, $from, $to, $list)
+  {
+    $result = [];
+
+    foreach ($list as $pair) {
+      $isExists = isset($pair[$key]);
+      $isEligible = $isExists ? ($pair[$key] >= $from && $pair[$key] <= $to) : false;
+      if ($isExists && $isEligible) $result[] = $pair;
+    }
+
+    return $result;
+  }
+
+  public function whereNotBetween($key, $from, $to, $list)
+  {
+    $result = [];
+
+    foreach ($list as $pair) {
+      $isExists = isset($pair[$key]);
+      $isEligible = $isExists ? !($pair[$key] >= $from && $pair[$key] <= $to) : false;
+      if ($isExists && $isEligible) $result[] = $pair;
+    }
+
+    return $result;
+  }
+
+  public function whereIn($key, $values, $list)
+  {
+    $result = [];
+
+    foreach ($list as $pair) {
+      $isExists = isset($pair[$key]);
+      $isEligible = $isExists ? in_array($pair[$key], $values, true) : false;
+      if ($isExists && $isEligible) $result[] = $pair;
+    }
+
+    return $result;
+  }
+
+  public function whereNotIn($key, $values, $list)
+  {
+    $result = [];
+
+    foreach ($list as $pair) {
+      $isExists = isset($pair[$key]);
+      $isEligible = $isExists ? !in_array($pair[$key], $values, true) : false;
+      if ($isExists && $isEligible) $result[] = $pair;
+    }
+
+    return $result;
+  }
+
+
   public function zip($other, $list)
   {
     $listLength = count($list);
@@ -1061,6 +1138,22 @@ class ListFunction
 
     return $result;
   }
+
+  private function compare($operator, $a, $b)
+  {
+    if ($operator === '===') return $a === $b;
+    if ($operator === '!==') return $a !== $b;
+
+    if ($operator === '==') return $a == $b;
+    if ($operator === '!=') return $a != $b;
+
+    if ($operator === '>=') return $a >= $b;
+    if ($operator === '<=') return $a <= $b;
+
+    if ($operator === '>') return $a > $b;
+    if ($operator === '<') return $a < $b;
+  }
+
 
   private function pathGetter($path, $onNotFound, $list)
   {

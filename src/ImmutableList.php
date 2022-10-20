@@ -545,6 +545,13 @@ class ImmutableList implements BaseList
     return new ImmutableList($result);
   }
 
+  public function tap($action)
+  {
+    $action($this->val);
+
+    return $this;
+  }
+
   public function tail()
   {
     $result = $this->listFunction->tail($this->val);
@@ -559,11 +566,46 @@ class ImmutableList implements BaseList
     return new ImmutableList($result);
   }
 
-  public function tap($action)
+  public function where($key, $value)
   {
-    $action($this->val);
+    $result = $this->listFunction->where($key, $value, $this->val);
 
-    return $this;
+    return new ImmutableList($result);
+  }
+
+  public function whereComparison($key, $operator, $value)
+  {
+    $result = $this->listFunction->whereComparison($key, $operator, $value, $this->val);
+
+    return new ImmutableList($result);
+  }
+
+  public function whereBetween($key, $from, $to)
+  {
+    $result = $this->listFunction->whereBetween($key, $from, $to, $this->val);
+
+    return new ImmutableList($result);
+  }
+
+  public function whereNotBetween($key, $from, $to)
+  {
+    $result = $this->listFunction->whereNotBetween($key, $from, $to, $this->val);
+
+    return new ImmutableList($result);
+  }
+
+  public function whereIn($key, $values)
+  {
+    $result = $this->listfunction->wherein($key, $values, $this->val);
+
+    return new immutablelist($result);
+  }
+
+  public function whereNotIn($key, $values)
+  {
+    $result = $this->listfunction->whereNotIn($key, $values, $this->val);
+
+    return new immutablelist($result);
   }
 
   public function val()
