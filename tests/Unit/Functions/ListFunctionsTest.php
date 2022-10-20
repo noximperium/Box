@@ -1322,3 +1322,130 @@ test('asserts unzip behaves correctly', function () {
   $sut = $fun->unzip($input);
   expect($sut)->toBe($expected);
 });
+
+test('asserts where behaves correctly', function () {
+  $fun = new ListFunction();
+  $list = [
+    ['name' => 'Orichalcum', 'rarity' => 3],
+    ['name' => 'Mythril', 'rarity' => 5],
+    ['name' => 'Gold', 'rarity' => 4],
+    ['name' => 'Pixel', 'rarity' => 5],
+    ['name' => 'Silver', 'rarity' => 2],
+    ['name' => 'Bronze', 'rarity' => 1]
+  ];
+
+  $expected = [
+    ['name' => 'Mythril', 'rarity' => 5],
+    ['name' => 'Pixel', 'rarity' => 5]
+  ];
+
+  $sut = $fun->where('rarity', 5, $list);
+  expect($sut)->toBe($expected);
+});
+
+test('asserts whereComparison behaves correctly', function () {
+  $fun = new ListFunction();
+  $list = [
+    ['name' => 'Orichalcum', 'rarity' => 3],
+    ['name' => 'Mythril', 'rarity' => 5],
+    ['name' => 'Gold', 'rarity' => 4],
+    ['name' => 'Pixel', 'rarity' => 5],
+    ['name' => 'Silver', 'rarity' => 2],
+    ['name' => 'Bronze', 'rarity' => 1]
+  ];
+
+  $expected = [
+    ['name' => 'Orichalcum', 'rarity' => 3],
+    ['name' => 'Mythril', 'rarity' => 5],
+    ['name' => 'Gold', 'rarity' => 4],
+    ['name' => 'Pixel', 'rarity' => 5],
+  ];
+
+  $sut = $fun->whereComparison('rarity', '>', 2, $list);
+  expect($sut)->toBe($expected);
+});
+
+test('asserts whereBetween behaves correctly', function () {
+  $fun = new ListFunction();
+  $list = [
+    ['name' => 'Orichalcum', 'rarity' => 3],
+    ['name' => 'Mythril', 'rarity' => 5],
+    ['name' => 'Gold', 'rarity' => 4],
+    ['name' => 'Pixel', 'rarity' => 5],
+    ['name' => 'Silver', 'rarity' => 2],
+    ['name' => 'Bronze', 'rarity' => 1]
+  ];
+
+  $expected = [
+    ['name' => 'Orichalcum', 'rarity' => 3],
+    ['name' => 'Mythril', 'rarity' => 5],
+    ['name' => 'Gold', 'rarity' => 4],
+    ['name' => 'Pixel', 'rarity' => 5],
+  ];
+
+  $sut = $fun->whereBetween('rarity', 3, 5, $list);
+  expect($sut)->toBe($expected);
+});
+
+test('asserts whereNotBetween behaves correctly', function () {
+  $fun = new ListFunction();
+  $list = [
+    ['name' => 'Orichalcum', 'rarity' => 3],
+    ['name' => 'Mythril', 'rarity' => 5],
+    ['name' => 'Gold', 'rarity' => 4],
+    ['name' => 'Pixel', 'rarity' => 5],
+    ['name' => 'Silver', 'rarity' => 2],
+    ['name' => 'Bronze', 'rarity' => 1]
+  ];
+
+  $expected = [
+    ['name' => 'Silver', 'rarity' => 2],
+    ['name' => 'Bronze', 'rarity' => 1]
+  ];
+
+  $sut = $fun->whereNotBetween('rarity', 3, 5, $list);
+  expect($sut)->toBe($expected);
+});
+
+
+test('asserts whereIn behaves correctly', function () {
+  $fun = new ListFunction();
+  $list = [
+    ['name' => 'Orichalcum', 'rarity' => 3],
+    ['name' => 'Mythril', 'rarity' => 5],
+    ['name' => 'Gold', 'rarity' => 4],
+    ['name' => 'Pixel', 'rarity' => 5],
+    ['name' => 'Silver', 'rarity' => 2],
+    ['name' => 'Bronze', 'rarity' => 1]
+  ];
+
+  $expected = [
+    ['name' => 'Orichalcum', 'rarity' => 3],
+    ['name' => 'Bronze', 'rarity' => 1]
+  ];
+
+  $sut = $fun->whereIn('rarity', [1, 3], $list);
+  expect($sut)->toBe($expected);
+});
+
+test('asserts whereNotIn behaves correctly', function () {
+  $fun = new ListFunction();
+  $list = [
+    ['name' => 'Orichalcum', 'rarity' => 3],
+    ['name' => 'Mythril', 'rarity' => 5],
+    ['name' => 'Gold', 'rarity' => 4],
+    ['name' => 'Pixel', 'rarity' => 5],
+    ['name' => 'Silver', 'rarity' => 2],
+    ['name' => 'Bronze', 'rarity' => 1]
+  ];
+
+  $expected = [
+    ['name' => 'Mythril', 'rarity' => 5],
+    ['name' => 'Gold', 'rarity' => 4],
+    ['name' => 'Pixel', 'rarity' => 5],
+    ['name' => 'Silver', 'rarity' => 2],
+  ];
+
+  $sut = $fun->whereNotIn('rarity', [1, 3], $list);
+  expect($sut)->toBe($expected);
+});

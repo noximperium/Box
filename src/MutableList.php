@@ -333,7 +333,7 @@ class MutableList implements BaseList
   {
     $result = $this->listFunction->mapNotNull($transform, $this->val);
     $this->val = $result;
-    
+
     return $this;
   }
 
@@ -618,6 +618,54 @@ class MutableList implements BaseList
   public function val()
   {
     return $this->val;
+  }
+
+  public function where($key, $value)
+  {
+    $result = $this->listFunction->where($key, $value, $this->val);
+    $this->val = $result;
+
+    return $this;
+  }
+
+  public function whereComparison($key, $operator, $value)
+  {
+    $result = $this->listFunction->whereComparison($key, $operator, $value, $this->val);
+    $this->val = $result;
+
+    return $this;
+  }
+
+  public function whereBetween($key, $from, $to)
+  {
+    $result = $this->listFunction->whereBetween($key, $from, $to, $this->val);
+    $this->val = $result;
+
+    return $this;
+  }
+
+  public function whereNotBetween($key, $from, $to)
+  {
+    $result = $this->listFunction->whereNotBetween($key, $from, $to, $this->val);
+    $this->val = $result;
+
+    return $this;
+  }
+
+  public function whereIn($key, $values)
+  {
+    $result = $this->listfunction->wherein($key, $values, $this->val);
+    $this->val = $result;
+
+    return $this;
+  }
+
+  public function whereNotIn($key, $values)
+  {
+    $result = $this->listfunction->whereNotIn($key, $values, $this->val);
+    $this->val = $result;
+
+    return $this;
   }
 
   public function zip($other)
