@@ -370,6 +370,15 @@ class MutableList implements BaseList
     return $this->listFunction->max($this->val);
   }
 
+  public function move($from, $to)
+  {
+    $result = $this->listFunction->move($from, $to, $this->val);
+    $this->val = $result;
+
+    return $this;
+  }
+
+
   public function none($predicate)
   {
     return $this->listFunction->none($predicate, $this->val);

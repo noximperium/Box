@@ -344,6 +344,13 @@ class ImmutableList implements BaseList
   {
     return $this->listFunction->max($this->val);
   }
+  
+  public function move($from, $to)
+  {
+    $result = $this->listFunction->move($from, $to, $this->val);
+
+    return new ImmutableList($result);
+  }
 
   public function none($predicate)
   {

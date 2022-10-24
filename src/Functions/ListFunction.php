@@ -599,6 +599,17 @@ class ListFunction
     return min($list);
   }
 
+  public function move($from, $to, $list)
+  {
+    $a = $list[$from];
+    $b = $list[$to];
+
+    $list[$from] = $b;
+    $list[$to] = $a;
+
+    return $list;
+  }
+
   public function none($predicate, $list)
   {
     foreach ($list as $value) {

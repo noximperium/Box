@@ -250,6 +250,11 @@ interface BaseList extends BaseCollection
   public function min();
 
   /**
+   * Move element from `$from` index to `$to` index.
+   */
+  public function move($from, $to);
+
+  /**
    * Performs the given action on each element and returns the list itself afterwards.
    */
   public function onEach($action);
