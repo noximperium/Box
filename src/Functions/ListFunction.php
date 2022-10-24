@@ -6,7 +6,6 @@ namespace NoxImperium\Box\Functions;
  * PLAN
  * Add Methods:
  * Intersperse
- * Move
  * Replace
  * 
  * Add Static Function:
@@ -794,6 +793,12 @@ class ListFunction
     return $list;
   }
 
+  public function replace($index, $value, $list)
+  {
+    $list[$index] = $value;
+
+    return $list;
+  }
 
   public function reverse($list)
   {

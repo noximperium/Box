@@ -534,6 +534,14 @@ class MutableList implements BaseList
     return $this;
   }
 
+  public function replace($index, $value)
+  {
+    $result = $this->listFunction->replace($index, $value, $this->val);
+    $this->val = $result;
+
+    return $this;
+  }
+
   public function sum()
   {
     return $this->listFunction->sum($this->list);

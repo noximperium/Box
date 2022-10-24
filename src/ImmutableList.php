@@ -344,7 +344,7 @@ class ImmutableList implements BaseList
   {
     return $this->listFunction->max($this->val);
   }
-  
+
   public function move($from, $to)
   {
     $result = $this->listFunction->move($from, $to, $this->val);
@@ -486,6 +486,13 @@ class ImmutableList implements BaseList
   public function runningReduceRightIndexed($operation)
   {
     $result = $this->listFunction->runningReduceRightIndexed($operation, $this->val);
+
+    return new ImmutableList($result);
+  }
+
+  public function replace($index, $value)
+  {
+    $result = $this->listFunction->replace($index, $value, $this->val);
 
     return new ImmutableList($result);
   }

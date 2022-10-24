@@ -313,6 +313,11 @@ interface BaseList extends BaseCollection
   public function reduceRightIndexed($operation);
 
   /**
+   * Replace element at specified index with supplied value.
+   */
+  public function replace($index, $value);
+
+  /**
    * Returns a list with elements in reversed order.
    */
   public function reverse();
