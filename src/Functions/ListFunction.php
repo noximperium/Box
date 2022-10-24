@@ -5,8 +5,6 @@ namespace NoxImperium\Box\Functions;
 /**
  * PLAN
  * Add Methods:
- * Insert
- * InsertAll
  * Intersperse
  * Move
  * Replace
@@ -521,6 +519,24 @@ class ListFunction
   public function head($list)
   {
     return $list[0];
+  }
+
+  public function insert($index, $value, $list)
+  {
+    $a = array_slice($list, 0, $index);
+    $b = array_slice($list, $index);
+
+    return [...$a, $value, ...$b];
+  }
+
+  public function insertAll($index, $values, $list)
+  {
+    if (gettype($values) !== 'array') $values = [$values];
+
+    $a = array_slice($list, 0, $index);
+    $b = array_slice($list, $index);
+
+    return [...$a, ...$values, ...$b];
   }
 
   public function last($list)
