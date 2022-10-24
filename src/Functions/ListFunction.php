@@ -2,6 +2,22 @@
 
 namespace NoxImperium\Box\Functions;
 
+/**
+ * PLAN
+ * Add Methods:
+ * Insert
+ * InsertAll
+ * Intersperse
+ * Move
+ * RemoveFirst
+ * RemoveLast
+ * Replace
+ * 
+ * Add Static Function:
+ * Range
+ * Repeat
+ */
+
 use Exception;
 
 class ListFunction
@@ -274,12 +290,33 @@ class ListFunction
 
   public function findLast($predicate, $list)
   {
-    for ($i = count($list) - 1; $i >= 0; $i++) {
-      $value = $list[$i];
-      if ($predicate($value)) return $value;
+    $lastIndex = count($list) - 1;
+
+    for ($i = $lastIndex; $i >= 0; $i--) {
+      if ($predicate($list[$i])) return $list[$i];
     }
 
-    return null;
+    return -1;
+  }
+
+  public function findIndex($element, $list)
+  {
+    foreach ($list as $index => $value) {
+      if ($value === $element) return $index;
+    }
+
+    return -1;
+  }
+
+  public function findLastIndex($element, $list)
+  {
+    $lastIndex = count($list) - 1;
+
+    for ($i = $lastIndex; $i >= 0; $i--) {
+      if ($element === $list[$i]) return $i;
+    }
+
+    return -1;
   }
 
   public function first($list)
@@ -488,49 +525,9 @@ class ListFunction
     return $list[0];
   }
 
-  public function indexOf($element, $list)
-  {
-    foreach ($list as $index => $value) {
-      if ($value === $element) return $index;
-    }
-
-    return -1;
-  }
-
-  public function indexOfFirst($predicate, $list)
-  {
-    foreach ($list as $index => $value) {
-      if ($predicate($value)) return $index;
-    }
-
-    return -1;
-  }
-
-  public function indexOfLast($predicate, $list)
-  {
-    $lastIndex = count($list) - 1;
-
-    for ($i = $lastIndex; $i >= 0; $i--) {
-      if ($predicate($list[$i])) return $i;
-    }
-
-    return -1;
-  }
-
   public function last($list)
   {
     return $list[count($list) - 1];
-  }
-
-  public function lastIndexOf($element, $list)
-  {
-    $lastIndex = count($list) - 1;
-
-    for ($i = $lastIndex; $i >= 0; $i--) {
-      if ($element === $list[$i]) return $i;
-    }
-
-    return -1;
   }
 
   public function map($transform, $list)
