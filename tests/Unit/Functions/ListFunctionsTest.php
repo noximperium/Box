@@ -359,6 +359,25 @@ test('asserts findLast behaves correctly', function () {
   expect($sut)->toBe($expected);
 });
 
+test('asserts findIndex behaves correctly', function () {
+  $fun = new ListFunction();
+  $list = [10, 20, 30];
+  $expected = 0;
+
+  $sut = $fun->findIndex(10, $list);
+  expect($sut)->toBe($expected);
+});
+
+test('asserts findLastIndex behaves correctly', function () {
+  $fun = new ListFunction();
+  $list = [10, 20, 30, 20, 10];
+  $expected = 3;
+
+  $sut = $fun->findLastIndex(20, $list);
+  expect($sut)->toBe($expected);
+});
+
+
 test('asserts first on non-empty array', function () {
   $fun = new ListFunction();
   $list = [
@@ -712,36 +731,30 @@ test('asserts head behaves correctly', function () {
   expect($sut)->toBe($expected);
 });
 
-test('asserts indexOf behaves correctly', function () {
+test('asserts insert behaves correctly', function () {
   $fun = new ListFunction();
   $list = [10, 20, 30];
-  $expected = 0;
+  $expected = [10, 20, 100, 30];
 
-  $sut = $fun->indexOf(10, $list);
+  $sut = $fun->insert(2, 100, $list);
   expect($sut)->toBe($expected);
 });
 
-test('asserts indexOfFirst behaves correctly', function () {
+test('asserts insertAll with array behaves correctly', function () {
   $fun = new ListFunction();
   $list = [10, 20, 30];
-  $expected = 1;
+  $expected = [10, 20, 100, 200, 30];
 
-  $sut = $fun->indexOfFirst(function ($element) {
-    return $element > 15;
-  }, $list);
-
+  $sut = $fun->insertAll(2, [100, 200], $list);
   expect($sut)->toBe($expected);
 });
 
-test('asserts indexOfLast behaves correctly', function () {
+test('asserts insertAll with single value behaves correctly', function () {
   $fun = new ListFunction();
   $list = [10, 20, 30];
-  $expected = 2;
+  $expected = [10, 20, 100, 30];
 
-  $sut = $fun->indexOfLast(function ($element) {
-    return $element > 15;
-  }, $list);
-
+  $sut = $fun->insertAll(2, 100, $list);
   expect($sut)->toBe($expected);
 });
 
@@ -751,15 +764,6 @@ test('asserts last behaves correctly', function () {
   $expected = 30;
 
   $sut = $fun->last($list);
-  expect($sut)->toBe($expected);
-});
-
-test('asserts lastIndexOf behaves correctly', function () {
-  $fun = new ListFunction();
-  $list = [10, 20, 30, 20, 10];
-  $expected = 3;
-
-  $sut = $fun->lastIndexOf(20, $list);
   expect($sut)->toBe($expected);
 });
 
