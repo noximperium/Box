@@ -288,6 +288,20 @@ class ImmutableList implements BaseList
     return $this->listFunction->head($this->val);
   }
 
+  public function insert($index, $value)
+  {
+    $result = $this->listFunction->insert($index, $value, $this->val);
+
+    return new ImmutableList($result);
+  }
+
+  public function insertAll($index, $values)
+  {
+    $result = $this->listFunction->insertAll($index, $values, $this->val);
+
+    return new ImmutableList($result);
+  }
+
   public function last()
   {
     return $this->listFunction->last($this->val);

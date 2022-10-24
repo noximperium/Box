@@ -201,6 +201,16 @@ interface BaseList extends BaseCollection
   public function head();
 
   /**
+   * Insert value at specified index.
+   */
+  public function insert($index, $value);
+
+  /**
+   * Insert all values at specified index.
+   */
+  public function insertAll($index, $values);
+
+  /**
    * Returns last element of this list.
    */
   public function last();

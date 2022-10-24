@@ -306,6 +306,23 @@ class MutableList implements BaseList
     return $this->listFunction->head($this->val);
   }
 
+
+  public function insert($index, $value)
+  {
+    $result = $this->listFunction->insert($index, $value, $this->val);
+    $this->val = $result;
+
+    return $this;
+  }
+
+  public function insertAll($index, $values)
+  {
+    $result = $this->listFunction->insertAll($index, $values, $this->val);
+    $this->val = $result;
+
+    return $this;
+  }
+
   public function last()
   {
     return $this->listFunction->last($this->val);
