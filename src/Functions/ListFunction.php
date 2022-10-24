@@ -392,7 +392,6 @@ class ListFunction
     return $accumulator;
   }
 
-
   public function foldRight($initial, $operation, $list)
   {
     $accumulator = $initial;

@@ -192,6 +192,16 @@ class MutableList implements BaseList
     return $this->listFunction->findLast($predicate, $this->val);
   }
 
+  public function findIndex($element)
+  {
+    return $this->listFunction->findIndex($element, $this->val);
+  }
+
+  public function findLastIndex($element)
+  {
+    return $this->listFunction->findLastIndex($element, $this->val);
+  }
+
   public function first()
   {
     return $this->listFunction->first($this->val);
@@ -296,29 +306,9 @@ class MutableList implements BaseList
     return $this->listFunction->head($this->val);
   }
 
-  public function indexOf($element)
-  {
-    return $this->listFunction->indexOf($element, $this->val);
-  }
-
-  public function indexOfFirst($predicate)
-  {
-    return $this->listFunction->indexOfFirst($predicate, $this->val);
-  }
-
-  public function indexOfLast($predicate)
-  {
-    return $this->listFunction->indexOfLast($predicate, $this->val);
-  }
-
   public function last()
   {
     return $this->listFunction->last($this->val);
-  }
-
-  public function lastIndexOf($element)
-  {
-    return $this->listFunction->lastIndexOf($element, $this->val);
   }
 
   public function map($transform)

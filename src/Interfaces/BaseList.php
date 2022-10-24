@@ -116,6 +116,18 @@ interface BaseList extends BaseCollection
   public function findLast($predicate);
 
   /**
+   * Returns index of the first element matching the given value, 
+   * or -1 if the list does not contain such element.
+   */
+  public function findIndex($element);
+
+  /**
+   * Returns index of the last element matching the given value, or -1 if the collection does not contain such element.
+   */
+  public function findLastIndex($element);
+
+
+  /**
    * Returns first element of this list or throw exception if empty.
    */
   public function first();
@@ -189,30 +201,9 @@ interface BaseList extends BaseCollection
   public function head();
 
   /**
-   * Returns first index of element, or -1 if the list does not contain element.
-   */
-  public function indexOf($element);
-
-  /**
-   * Returns index of the first element matching the given predicate, 
-   * or -1 if the list does not contain such element.
-   */
-  public function indexOfFirst($predicate);
-
-  /**
-   * Returns index of the last element matching the given predicate, or -1 if the collection does not contain such element.
-   */
-  public function indexOfLast($predicate);
-
-  /**
    * Returns last element of this list.
    */
   public function last();
-
-  /**
-   * Returns last index of element, or -1 if the list does not contain element.
-   */
-  public function lastIndexOf($element);
 
   /**
    * Returns a list containing the results of applying the given transform function 
