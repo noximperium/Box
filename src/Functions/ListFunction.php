@@ -9,8 +9,6 @@ namespace NoxImperium\Box\Functions;
  * InsertAll
  * Intersperse
  * Move
- * RemoveFirst
- * RemoveLast
  * Replace
  * 
  * Add Static Function:
@@ -754,6 +752,20 @@ class ListFunction
     }
 
     return $accumulator;
+  }
+
+  public function removeFirst($list)
+  {
+    array_shift($list);
+
+    return $list;
+  }
+
+  public function removeLast($list)
+  {
+    array_pop($list);
+
+    return $list;
   }
 
 
