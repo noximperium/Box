@@ -48,7 +48,7 @@ interface BaseList extends BaseCollection
    * Returns a list containing only elements from the given collection 
    * having distinct keys returned by the given selector function.
    */
-  public function distinctBy($predicate);
+  public function distinctBy($keySelector);
 
   /**
    * Returns a list containing all elements except first n elements.
