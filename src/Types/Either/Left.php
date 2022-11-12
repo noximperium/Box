@@ -1,6 +1,6 @@
 <?php
 
-namespace NoxImperium\Box\Types;
+namespace NoxImperium\Box\Types\Either;
 
 use Exception;
 use NoxImperium\Box\Helper;
@@ -57,16 +57,16 @@ class Left extends Either
     return false;
   }
 
+  public function map($fn)
+  {
+    return $this;
+  }
+
   public function orElse($or)
   {
     $isEither = Helper::isEither($or);
     if ($isEither) return $or;
 
     throw new Exception("Passed value is not Either.");
-  }
-
-  public function map($fn)
-  {
-    return $this;
   }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace NoxImperium\Box\Types;
+namespace NoxImperium\Box\Types\Either;
 
 use Exception;
 use NoxImperium\Box\Helper;
@@ -69,15 +69,15 @@ class Right extends Either
     return true;
   }
 
-  public function orElse($or)
-  {
-    return $this;
-  }
-
   public function map($fn)
   {
     $result = $fn($this->value);
 
     return new Right($result);
+  }
+
+  public function orElse($or)
+  {
+    return $this;
   }
 }

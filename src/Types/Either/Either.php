@@ -1,6 +1,6 @@
 <?php
 
-namespace NoxImperium\Box\Types;
+namespace NoxImperium\Box\Types\Either;
 
 use NoxImperium\Box\Helper;
 
