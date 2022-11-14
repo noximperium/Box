@@ -1,11 +1,11 @@
 <?php
 
-namespace NoxImperium\Box;
+namespace NoxImperium\Box\Types;
 
 use NoxImperium\Box\Functions\ListFunction;
 use NoxImperium\Box\Interfaces\BaseList;
 
-class ImmutableList implements BaseList
+class ListType implements BaseList
 {
   private $val;
   private $listFunction;
@@ -24,7 +24,7 @@ class ImmutableList implements BaseList
       $result[] = $value;
     }
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function all($predicate)
@@ -46,14 +46,14 @@ class ImmutableList implements BaseList
   {
     $result = $this->listFunction->append($value, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function appendAll($list)
   {
     $result = $this->listFunction->appendAll($list, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function contains($value)
@@ -70,7 +70,7 @@ class ImmutableList implements BaseList
   {
     $result = $this->listFunction->collectBy($keySelector, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function count($predicate)
@@ -82,56 +82,56 @@ class ImmutableList implements BaseList
   {
     $result = $this->listFunction->distinct($this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function distinctBy($keySelector)
   {
     $result = $this->listFunction->distinctBy($keySelector, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function drop($n)
   {
     $result = $this->listFunction->drop($n, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function dropWhile($predicate)
   {
     $result = $this->listFunction->dropWhile($predicate, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function dropLast($n)
   {
     $result = $this->listFunction->dropLast($n, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function dropLastWhile($predicate)
   {
     $result = $this->listFunction->dropLastWhile($predicate, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function dropRepeats()
   {
     $result = $this->listFunction->dropRepeats($this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function dropRepeatsBy($predicate)
   {
     $result = $this->listFunction->dropRepeatsBy($predicate, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function endsWith($sublist)
@@ -143,28 +143,28 @@ class ImmutableList implements BaseList
   {
     $result = $this->listFunction->filter($predicate, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function filterIndexed($predicate)
   {
     $result = $this->listFunction->filterIndexed($predicate, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function filterNot($predicate)
   {
     $result = $this->listFunction->filterNot($predicate, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function filterNotIndexed($predicate)
   {
     $result = $this->listFunction->filterNotIndexed($predicate, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function find($predicate)
@@ -201,7 +201,7 @@ class ImmutableList implements BaseList
   {
     $result = $this->listFunction->flatten($this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function forEach($action)
@@ -273,14 +273,14 @@ class ImmutableList implements BaseList
   {
     $result = $this->listFunction->groupBy($groupKeySelector, $valueTransform, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function groupByKeyed($groupKeySelector, $keyTransform, $valueTransform = null)
   {
     $result = $this->listFunction->groupByKeyed($groupKeySelector, $keyTransform, $valueTransform, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function head()
@@ -292,14 +292,14 @@ class ImmutableList implements BaseList
   {
     $result = $this->listFunction->insert($index, $value, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function insertAll($index, $values)
   {
     $result = $this->listFunction->insertAll($index, $values, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function last()
@@ -311,28 +311,28 @@ class ImmutableList implements BaseList
   {
     $result = $this->listFunction->map($transform, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function mapNotNull($transform)
   {
     $result = $this->listFunction->mapNotNull($transform, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function mapIndexed($transform)
   {
     $result = $this->listFunction->mapIndexed($transform, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function mapIndexedNotNull($transform)
   {
     $result = $this->listFunction->mapIndexedNotNull($transform, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function max()
@@ -349,7 +349,7 @@ class ImmutableList implements BaseList
   {
     $result = $this->listFunction->move($from, $to, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function none($predicate)
@@ -375,126 +375,126 @@ class ImmutableList implements BaseList
   {
     $result = $this->listFunction->pluck($path, $default, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function partition($predicate)
   {
     $result = $this->listFunction->partition($predicate, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function prepend($value)
   {
     $result = $this->listFunction->prepend($value, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function prependAll($list)
   {
     $result = $this->listFunction->prependAll($list, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function reduce($operation)
   {
     $result = $this->listFunction->reduce($operation, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function reduceIndexed($operation)
   {
     $result = $this->listFunction->reduceIndexed($operation, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function reduceRight($operation)
   {
     $result = $this->listFunction->reduceRight($operation, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function reduceRightIndexed($operation)
   {
     $result = $this->listFunction->reduceRightIndexed($operation, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function reverse()
   {
     $result = $this->listFunction->reverse($this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function runningFold($initial, $operation)
   {
     $result = $this->listFunction->runningFold($initial, $operation, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function runningFoldIndexed($initial, $operation)
   {
     $result = $this->listFunction->runningFoldIndexed($initial, $operation, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function runningFoldRight($initial, $operation)
   {
     $result = $this->listFunction->runningFoldRight($initial, $operation, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function runningFoldRightIndexed($initial, $operation)
   {
     $result = $this->listFunction->runningFoldRightIndexed($initial, $operation, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function runningReduce($operation)
   {
     $result = $this->listFunction->runningReduce($operation, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function runningReduceIndexed($operation)
   {
     $result = $this->listFunction->runningReduceIndexed($operation, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function runningReduceRight($operation)
   {
     $result = $this->listFunction->runningReduceRight($operation, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function runningReduceRightIndexed($operation)
   {
     $result = $this->listFunction->runningReduceRightIndexed($operation, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function replace($index, $value)
   {
     $result = $this->listFunction->replace($index, $value, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function sum()
@@ -506,28 +506,28 @@ class ImmutableList implements BaseList
   {
     $result = $this->listFunction->slice($from, $to, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function sortBy($comparator)
   {
     $result = $this->listFunction->sortBy($comparator, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function splitAt($index)
   {
     $result = $this->listFunction->splitAt($index, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function splitEvery($length)
   {
     $result = $this->listFunction->splitEvery($length, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function startsWith($sublist)
@@ -539,28 +539,28 @@ class ImmutableList implements BaseList
   {
     $result = $this->listFunction->take($n, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function takeWhile($predicate)
   {
     $result = $this->listFunction->takeWhile($predicate, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function takeLast($n)
   {
     $result = $this->listFunction->takeLast($n, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function takeLastWhile($predicate)
   {
     $result = $this->listFunction->takeLastWhile($predicate, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function tap($action)
@@ -574,56 +574,56 @@ class ImmutableList implements BaseList
   {
     $result = $this->listFunction->tail($this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function unzip()
   {
     $result = $this->listFunction->unzip($this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function where($key, $value)
   {
     $result = $this->listFunction->where($key, $value, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function whereComparison($key, $operator, $value)
   {
     $result = $this->listFunction->whereComparison($key, $operator, $value, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function whereBetween($key, $from, $to)
   {
     $result = $this->listFunction->whereBetween($key, $from, $to, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function whereNotBetween($key, $from, $to)
   {
     $result = $this->listFunction->whereNotBetween($key, $from, $to, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function whereIn($key, $values)
   {
     $result = $this->listfunction->wherein($key, $values, $this->val);
 
-    return new immutablelist($result);
+    return new ListType($result);
   }
 
   public function whereNotIn($key, $values)
   {
     $result = $this->listfunction->whereNotIn($key, $values, $this->val);
 
-    return new immutablelist($result);
+    return new ListType($result);
   }
 
   public function val()
@@ -635,13 +635,13 @@ class ImmutableList implements BaseList
   {
     $result = $this->listFunction->zip($other, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 
   public function zipWith($other, $transform)
   {
     $result = $this->listFunction->zipWith($other, $transform, $this->val);
 
-    return new ImmutableList($result);
+    return new ListType($result);
   }
 }

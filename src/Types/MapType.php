@@ -1,11 +1,11 @@
 <?php
 
-namespace NoxImperium\Box;
+namespace NoxImperium\Box\Types;
 
 use NoxImperium\Box\Functions\MapFunction;
 use NoxImperium\Box\Interfaces\BaseMap;
 
-class ImmutableMap implements BaseMap
+class MapType implements BaseMap
 {
   private $val;
   private $mapFunction;
@@ -95,28 +95,28 @@ class ImmutableMap implements BaseMap
   {
     $result = $this->mapFunction->mergeLeft($this->val, $other);
 
-    return new ImmutableMap($result);
+    return new MapType($result);
   }
 
   public function mergeDeepLeft($other)
   {
     $result = $this->mapFunction->mergeDeepLeft($this->val, $other);
 
-    return new ImmutableMap($result);
+    return new MapType($result);
   }
 
   public function mergeRight($other)
   {
     $result = $this->mapFunction->mergeRight($this->val, $other);
 
-    return new ImmutableMap($result);
+    return new MapType($result);
   }
 
   public function mergeDeepRight($other)
   {
     $result = $this->mapFunction->mergeDeepRight($this->val, $other);
 
-    return new ImmutableMap($result);
+    return new MapType($result);
   }
 
   // TO BE IMPLEMENTED LATER
@@ -133,14 +133,14 @@ class ImmutableMap implements BaseMap
   {
     $result = $this->mapFunction->modify($key, $transform, $this->val);
 
-    return new ImmutableMap($result);
+    return new MapType($result);
   }
 
-  public function modifyPath($path, $transform)
+  public function modifyOnPath($path, $transform)
   {
-    $result = $this->mapFunction->modifyPath($path, $transform, $this->val);
+    $result = $this->mapFunction->modifyOnPath($path, $transform, $this->val);
 
-    return new ImmutableMap($result);
+    return new MapType($result);
   }
 
   public function none($predicate)
@@ -152,7 +152,7 @@ class ImmutableMap implements BaseMap
   {
     $result = $this->mapFunction->omit($paths, $this->val);
 
-    return new ImmutableMap($result);
+    return new MapType($result);
   }
 
   public function onEach($action)
@@ -173,28 +173,28 @@ class ImmutableMap implements BaseMap
   {
     $result = $this->mapFunction->put($key, $value, $this->val);
 
-    return new ImmutableMap($result);
+    return new MapType($result);
   }
 
   public function putOnPath($path, $value)
   {
     $result = $this->mapFunction->putOnPath($path, $value, $this->val);
 
-    return new ImmutableMap($result);
+    return new MapType($result);
   }
 
   public function remove($key)
   {
     $result = $this->mapFunction->remove($key, $this->val);
 
-    return new ImmutableMap($result);
+    return new MapType($result);
   }
 
   public function removeOnPath($path)
   {
     $result = $this->mapFunction->removeOnPath($path, $this->val);
 
-    return new ImmutableMap($result);
+    return new MapType($result);
   }
 
   public function tap($action)

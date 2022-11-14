@@ -83,7 +83,7 @@ interface BaseMap extends BaseCollection
   /**
    * Returns a map with specified path transformed by transform function.
    */
-  public function modifyPath($path, $transform);
+  public function modifyOnPath($path, $transform);
 
   /**
    * Returns a map without specified key.

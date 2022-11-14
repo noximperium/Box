@@ -1,12 +1,12 @@
 <?php
 
-namespace NoxImperium\Box\Types\Tryer;
+namespace NoxImperium\Box\Types\TryType;
 
 use Exception;
 use NoxImperium\Box\Helper;
-use NoxImperium\Box\Types\Tryer\Tryer;
+use NoxImperium\Box\Types\TryType\TryType;
 
-class Failure extends Tryer
+class Failure extends TryType
 {
   public function __construct($value)
   {

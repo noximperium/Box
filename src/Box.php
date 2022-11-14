@@ -2,28 +2,30 @@
 
 namespace NoxImperium\Box;
 
-use NoxImperium\Box\ImmutableList;
-use NoxImperium\Box\MutableList;
+use NoxImperium\Box\Types\ListType;
+use NoxImperium\Box\Types\MapType;
+use NoxImperium\Box\Types\TryType\Success;
+use NoxImperium\Box\Types\TryType\TryType;
 
 class Box
 {
-  public static function immutableList($val)
+  public static function list($val)
   {
-    return new ImmutableList($val);
+    return new ListType($val);
   }
 
-  public static function mutableList($val)
+  public static function map($val)
   {
-    return new MutableList($val);
+    return new MapType($val);
   }
 
-  public static function immutableMap($val)
+  public static function either($val)
   {
-    return new ImmutableMap($val);
+    return new Success($val);
   }
 
-  public static function mutableMap($val)
+  public static function try($computation)
   {
-    return new MutableMap($val);
+    return TryType::on($computation);
   }
 }

@@ -1,12 +1,12 @@
 <?php
 
-namespace NoxImperium\Box\Types\Tryer;
+namespace NoxImperium\Box\Types\TryType;
 
 use Exception;
 use NoxImperium\Box\Helper;
-use NoxImperium\Box\Types\Tryer\Tryer;
+use NoxImperium\Box\Types\TryType\TryType;
 
-class Success extends Tryer
+class Success extends TryType
 {
   public function __construct($value)
   {
@@ -40,7 +40,7 @@ class Success extends Tryer
     $isTryer = Helper::isTryer($this->value);
     if ($isTryer) return $this->value;
 
-    throw new Exception("The content inside this Tryer is neither Success nor Failure.");
+    throw new Exception("The content inside this TryType is neither Success nor Failure.");
   }
 
   public function foreach($function)

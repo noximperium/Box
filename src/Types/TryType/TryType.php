@@ -1,11 +1,11 @@
 <?php
 
-namespace NoxImperium\Box\Types\Tryer;
+namespace NoxImperium\Box\Types\TryType;
 
 use Exception;
 use NoxImperium\Box\Helper;
 
-abstract class Tryer
+abstract class TryType
 {
   protected $value;
 
@@ -23,7 +23,7 @@ abstract class Tryer
   public abstract function recover($recoverer);
   public abstract function recoverWith($recoverer);
 
-  public static function try($computation)
+  public static function on($computation)
   {
     try {
       $result = $computation();
