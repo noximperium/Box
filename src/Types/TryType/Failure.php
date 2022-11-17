@@ -74,25 +74,19 @@ class Failure extends TryType
     throw new Exception("Passed value is not Success nor Failure.");
   }
 
-  public function recover($pairs)
+  public function recover($function)
   {
-    foreach ($pairs as $pair) {
-      $isTrue = $pair->first($this->value);
-      if ($isTrue) return new Success($pair->second());
-    }
+    $result = $function($this->value);
 
-    return $this;
+    return new Success($result);
   }
 
-  public function recoverWith($pairs)
+  public function recoverWith($function)
   {
-    foreach ($pairs as $pair) {
-      $isFalse = !$pair->first($this->value);
-      if ($isFalse) continue;
+    $result = $function($this->value);
+    $isTryer = Helper::isTryer($result);
 
-      $isTryer = Helper::isTryer($pair->second());
-      if ($isTryer) return $pair->second();
-    }
+    if ($isTryer) return $result;
 
     return $this;
   }

@@ -13,6 +13,11 @@ class Pair
     $this->second = $second;
   }
 
+  public static function of($first, $second)
+  {
+    return new Pair($first, $second);
+  }
+
   public function setFirst($value)
   {
     $this->first = $value;

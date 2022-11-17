@@ -38,6 +38,7 @@ class ListFunction
   public function adjust($index, $transform, $list)
   {
     $list[$index] = $transform($list[$index]);
+
     return $list;
   }
 
