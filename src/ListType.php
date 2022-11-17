@@ -932,6 +932,11 @@ class ListType
     return $result;
   }
 
+  public function size()
+  {
+    return count($this->val);
+  }
+
   public function sum()
   {
     return array_sum($this->val);

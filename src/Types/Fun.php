@@ -2,6 +2,8 @@
 
 namespace NoxImperium\Box\Types;
 
+define("FUN_PLACEHOLDER", "FUN_PLACEHOLDER");
+
 use Closure;
 use Exception;
 use ReflectionFunction;
