@@ -1,11 +1,11 @@
 <?php
 
-namespace NoxImperium\Box\Types\Either;
+namespace NoxImperium\Box\Types\EitherType;
 
 use Exception;
-use NoxImperium\Box\Helper;
+use NoxImperium\Box\Utils\TypeChecker;
 
-class Left extends Either
+class Left extends EitherType
 {
   public function __construct($value)
   {
@@ -64,7 +64,7 @@ class Left extends Either
 
   public function orElse($or)
   {
-    $isEither = Helper::isEither($or);
+    $isEither = TypeChecker::isEither($or);
     if ($isEither) return $or;
 
     throw new Exception("Passed value is not Either.");

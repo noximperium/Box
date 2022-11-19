@@ -1,10 +1,10 @@
 <?php
 
-namespace NoxImperium\Box\Types\Either;
+namespace NoxImperium\Box\Types\EitherType;
 
-use NoxImperium\Box\Helper;
+use NoxImperium\Box\Utils\TypeChecker;
 
-abstract class Either
+abstract class EitherType
 {
   protected $value;
 
@@ -34,7 +34,7 @@ abstract class Either
 
   public function getOrElse($or)
   {
-    $isRight = Helper::isRight($this);
+    $isRight = TypeChecker::isRight($this);
     if ($isRight) return $this->value;
 
     return $or;
@@ -42,7 +42,7 @@ abstract class Either
 
   public function swap()
   {
-    $isRight = Helper::isRight($this);
+    $isRight = TypeChecker::isRight($this);
     if ($isRight) return new Left($this->value);
 
     return new Right($this->value);

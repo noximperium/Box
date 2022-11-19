@@ -3,8 +3,8 @@
 namespace NoxImperium\Box\Types\TryType;
 
 use Exception;
-use NoxImperium\Box\Helper;
 use NoxImperium\Box\Types\TryType\TryType;
+use NoxImperium\Box\Utils\TypeChecker;
 
 class Failure extends TryType
 {
@@ -68,7 +68,7 @@ class Failure extends TryType
 
   public function orElse($tryer)
   {
-    $isTryer = Helper::isTryer($tryer);
+    $isTryer = TypeChecker::isTryer($tryer);
     if ($isTryer) return $tryer;
 
     throw new Exception("Passed value is not Success nor Failure.");
@@ -84,7 +84,7 @@ class Failure extends TryType
   public function recoverWith($function)
   {
     $result = $function($this->value);
-    $isTryer = Helper::isTryer($result);
+    $isTryer = TypeChecker::isTryer($result);
 
     if ($isTryer) return $result;
 

@@ -1,11 +1,12 @@
 <?php
 
-namespace NoxImperium\Box\Types\Either;
+namespace NoxImperium\Box\Types\EitherType;
 
 use Exception;
-use NoxImperium\Box\Helper;
+use NoxImperium\Box\Types\EitherType\EitherType;
+use NoxImperium\Box\Utils\TypeChecker;
 
-class Right extends Either
+class Right extends EitherType
 {
   public function __construct($value)
   {
@@ -24,7 +25,7 @@ class Right extends Either
 
   public function flatten()
   {
-    $isEither = Helper::isEither($this->value);
+    $isEither = TypeChecker::isEither($this->value);
     if ($isEither) return $this->value;
 
     throw new Exception("The content inside this Either is not Either.");
@@ -33,7 +34,7 @@ class Right extends Either
   public function flatMap($fn)
   {
     $result = $fn($this->value);
-    if (Helper::isEither($result)) return $result;
+    if (TypeChecker::isEither($result)) return $result;
 
     throw new Exception("The result of transformation is not Either.");
   }

@@ -1,8 +1,8 @@
 <?php
 
-namespace NoxImperium\Box\Types\Option;
+namespace NoxImperium\Box\Types\OptionType;
 
-abstract class Option
+abstract class OptionType
 {
   private $value;
 

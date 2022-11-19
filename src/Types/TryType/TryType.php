@@ -3,7 +3,7 @@
 namespace NoxImperium\Box\Types\TryType;
 
 use Exception;
-use NoxImperium\Box\Helper;
+use NoxImperium\Box\Utils\TypeChecker;
 
 abstract class TryType
 {
@@ -46,7 +46,7 @@ abstract class TryType
     if ($this->isFailure()) $result = $onFailure($this->value);
     else $result = $onSuccess($this->value);
 
-    $isTryer = Helper::isTryer($result);
+    $isTryer = TypeChecker::isTryer($result);
     if ($isTryer) return $result;
 
     throw new Exception("The passed value is neither Success or Failure.");
