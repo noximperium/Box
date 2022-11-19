@@ -1,12 +1,12 @@
 <?php
 
-namespace NoxImperium\Box;
+namespace NoxImperium\Box\Utils;
 
-class Helper
+class TypeChecker
 {
   public static function isEither($value)
   {
-    return Helper::isLeft($value) || Helper::isRight($value);
+    return TypeChecker::isLeft($value) || TypeChecker::isRight($value);
   }
 
   public static function isRight($value)
@@ -25,7 +25,7 @@ class Helper
 
   public static function isTryer($value)
   {
-    return Helper::isSuccess($value) || Helper::isFailure($value);
+    return TypeChecker::isSuccess($value) || TypeChecker::isFailure($value);
   }
 
   public static function isSuccess($value)

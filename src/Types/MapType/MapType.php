@@ -1,20 +1,17 @@
 <?php
 
-namespace NoxImperium\Box;
+namespace NoxImperium\Box\Types\MapType;
 
 use Exception;
-use NoxImperium\Box\Functions\MapFunction;
-use NoxImperium\Box\Interfaces\BaseMap;
+use NoxImperium\Box\Types\ListType\ListType;
 
 class MapType
 {
   private $val;
-  private $mapFunction;
 
   public function __construct($val)
   {
     $this->val = $val;
-    $this->mapFunction = new MapFunction();
   }
 
   public function containsKey($key)

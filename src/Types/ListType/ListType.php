@@ -1,20 +1,16 @@
 <?php
 
-namespace NoxImperium\Box;
+namespace NoxImperium\Box\Types\ListType;
 
 use Exception;
-use NoxImperium\Box\Functions\ListFunction;
-use NoxImperium\Box\Interfaces\BaseList;
 
 class ListType
 {
   private $val;
-  private $listFunction;
 
   public function __construct($val)
   {
     $this->val = $val;
-    $this->listFunction = new ListFunction();
   }
 
   public static function repeat($value, $n)
