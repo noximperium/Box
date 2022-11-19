@@ -130,9 +130,9 @@ class MapType
 
   public function mergeDeepLeft($other)
   {
-    $this->_mergeDeepLeft($map, $other);
+    $this->_mergeDeepLeft($this->val, $other);
 
-    return new MapType($map);
+    return new MapType($this->val);
   }
 
   public function mergeRight($other)
@@ -147,9 +147,9 @@ class MapType
 
   public function mergeDeepRight($other)
   {
-    $this->_mergeDeepRight($map, $other);
+    $this->_mergeDeepRight($this->val, $other);
 
-    return new MapType($map);
+    return new MapType($this->val);
   }
 
   public function mergeWith($transform, $other)
@@ -160,19 +160,19 @@ class MapType
       else $result[$key] = $value;
     }
 
-    return $result;
+    return new MapType($result);
   }
 
   public function mergeDeepWith($transform, $other)
   {
-    $this->_mergeDeepWith($transform, $map, $other);
+    $this->_mergeDeepWith($transform, $this->val, $other);
 
-    return new MapType($map);
+    return new MapType($this->val);
   }
 
   public function modify($key, $transform)
   {
-    $isKeyExists = isset($map[$key]);;
+    $isKeyExists = isset($this->val[$key]);;
     if (!$isKeyExists) return $this;
 
     $newMap = $this->val;
@@ -181,7 +181,7 @@ class MapType
     return new MapType($newMap);
   }
 
-  public function modifyPath($path, $transform)
+  public function modifyOnPath($path, $transform)
   {
     if (gettype($path) === 'string') $path = explode('.', $path);
 

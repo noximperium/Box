@@ -338,20 +338,20 @@ class ListType
     return $this->val[0];
   }
 
-  public function flatMap($transform, $list)
+  public function flatMap($transform)
   {
     $result = [];
-    foreach ($list as $value) {
+    foreach ($this->val as $value) {
       $result = array_merge($result, $transform($value));
     }
 
     return new ListType($result);
   }
 
-  public function flatMapIndexed($transform, $list)
+  public function flatMapIndexed($transform)
   {
     $result = [];
-    foreach ($list as $key => $value) {
+    foreach ($this->val as $key => $value) {
       $result = array_merge($result, $transform($key, $value));
     }
 
@@ -360,8 +360,13 @@ class ListType
 
   public function flatten()
   {
-    // TODO
-    return null;
+    $result = [];
+    foreach ($this->val as $value) {
+      if (is_array($value)) $result = [...$result, ...$value];
+      else $result[] = $value;
+    }
+
+    return new ListType($result);
   }
 
   public function fold($initial, $operation)
@@ -431,12 +436,12 @@ class ListType
 
   public function getOrElse($index, $default)
   {
-    return $list[$index] ?? $default;
+    return $this->val[$index] ?? $default;
   }
 
   public function getOrNull($index)
   {
-    return $list[$index] ?? null;
+    return $this->val[$index] ?? null;
   }
 
   public function getOnPath($path)
@@ -520,7 +525,7 @@ class ListType
     $a = array_slice($this->val, 0, $index);
     $b = array_slice($this->val, $index);
 
-    return [...$a, $value, ...$b];
+    return new ListType([...$a, $value, ...$b]);
   }
 
   public function insertAll($index, $values)
@@ -530,7 +535,7 @@ class ListType
     $a = array_slice($this->val, 0, $index);
     $b = array_slice($this->val, $index);
 
-    return [...$a, ...$values, ...$b];
+    return new ListType([...$a, ...$values, ...$b]);
   }
 
   public function last()
@@ -546,7 +551,7 @@ class ListType
       $result[] = $transform($value, $key);
     }
 
-    return $result;
+    return new ListType($result);
   }
 
   public function mapNotNull($transform)
@@ -643,7 +648,7 @@ class ListType
       return $ref;
     }, $this->val);
 
-    return $result;
+    return new ListType($result);
   }
 
   public function partition($predicate)
@@ -656,7 +661,7 @@ class ListType
       else $dissatisfy[] = $value;
     }
 
-    return [$satisfy, $dissatisfy];
+    return new ListType([$satisfy, $dissatisfy]);
   }
 
   public function prepend($value)
@@ -826,7 +831,7 @@ class ListType
       $result[] = $accumulator;
     }
 
-    return $result;
+    return new ListType($result);
   }
 
   public function runningFoldIndexed($initial, $operation)
@@ -839,7 +844,7 @@ class ListType
       $result[] = $accumulator;
     }
 
-    return $result;
+    return new ListType($result);
   }
 
   public function runningFoldRight($initial, $operation)
@@ -853,7 +858,7 @@ class ListType
       $result[] = $accumulator;
     }
 
-    return $result;
+    return new ListType($result);
   }
 
   public function runningFoldRightIndexed($initial, $operation)
@@ -867,7 +872,7 @@ class ListType
       $result[] = $accumulator;
     }
 
-    return $result;
+    return new ListType($result);
   }
 
   public function runningReduce($operation)
@@ -881,7 +886,7 @@ class ListType
       $result[] = $accumulator;
     }
 
-    return $result;
+    return new ListType($result);
   }
 
   public function runningReduceIndexed($operation)
@@ -895,7 +900,7 @@ class ListType
       $result[] = $accumulator;
     }
 
-    return $result;
+    return new ListType($result);
   }
 
   public function runningReduceRight($operation)
@@ -910,7 +915,7 @@ class ListType
       $result[] = $accumulator;
     }
 
-    return $result;
+    return new ListType($result);
   }
 
   public function runningReduceRightIndexed($operation)
@@ -925,7 +930,7 @@ class ListType
       $result[] = $accumulator;
     }
 
-    return $result;
+    return new ListType($result);
   }
 
   public function size()
@@ -976,7 +981,7 @@ class ListType
     $a = array_slice($this->val, 0, $index);
     $b = array_slice($this->val, $index);
 
-    return [$a, $b];
+    return new ListType([$a, $b]);
   }
 
   public function splitEvery($length)
@@ -994,7 +999,7 @@ class ListType
 
     if (count($temp) !== 0) $chunked[] = $temp;
 
-    return $chunked;
+    return new ListType($chunked);
   }
 
   public function take($n)
@@ -1043,7 +1048,7 @@ class ListType
 
   public function tail()
   {
-    return array_slice($this->val, 1);
+    return new ListType(array_slice($this->val, 1));
   }
 
   public function unzip()
@@ -1056,7 +1061,7 @@ class ListType
       $b[] = $element[1];
     }
 
-    return [$a, $b];
+    return new ListType([$a, $b]);
   }
 
   public function val()
